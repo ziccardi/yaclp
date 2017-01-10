@@ -3,13 +3,13 @@ package it.yaclp;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by ziccardi on 10/01/2017.
- */
 public class Option implements IOption {
     private List<IOption> requiredOptions = new ArrayList<IOption>();
+    private Argument optionArgs = null;
 
     private final String shortName;
+
+    private boolean hasArgs = false;
 
     public Option(final String shortName) {
         this.shortName = shortName;
@@ -39,6 +39,10 @@ public class Option implements IOption {
                 // consume and manage it
                 args.remove(i);
                 res.addValue(shortName, "true");
+                if (optionArgs != null) {
+                    optionArgs.consume(this, args, i, res);
+                }
+                // consume again if repeated
                 consume(args, res);
             }
         }
@@ -50,5 +54,9 @@ public class Option implements IOption {
 
     public String getShortName() {
         return shortName;
+    }
+
+    public void setArgument(Argument arg) {
+        this.optionArgs = arg;
     }
 }

@@ -13,4 +13,6 @@ public interface IOption {
     public void addRequiredOption(IOption option);
 
     public String getShortName();
+
+    public void setArgument(Argument arg);
 }

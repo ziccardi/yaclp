@@ -50,4 +50,8 @@ public class MutuallyExclusiveOptions implements IOption {
     public String getShortName() {
         return null;
     }
+
+    public void setArgument(Argument arg) {
+
+    }
 }

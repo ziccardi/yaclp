@@ -30,6 +30,7 @@ public class Parser {
         Option version = new Option("-v");
         Option help = new Option("-h");
         Option conf = new Option("-c");
+        conf.setArgument(new Argument(true));
 
         MutuallyExclusiveOptions rootOpts = new MutuallyExclusiveOptions(help, version, conf);
 
@@ -47,6 +48,6 @@ public class Parser {
         p.addOption(rootOpts);
         p.addOption(exclOpts);
 
-        p.parse(new String[]{"-c", "-i"});
+        p.parse(new String[]{"-c", "myconf.ini", "-i"});
     }
 }
