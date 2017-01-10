@@ -33,6 +33,7 @@ public class Parser {
         conf.setArgument(new Argument(true));
 
         MutuallyExclusiveOptions rootOpts = new MutuallyExclusiveOptions(help, version, conf);
+        rootOpts.setMandatory(true);
 
         Option interactive = new Option("-i", "--interactive");
         interactive.addRequiredOption(conf);
@@ -40,7 +41,10 @@ public class Parser {
         Option list = new Option("-l", "--list");
         list.addRequiredOption(conf);
 
-        MutuallyExclusiveOptions exclOpts = new MutuallyExclusiveOptions(interactive, list);
+        Option helpPlugin = new Option("-H", "--pluginHelp");
+        helpPlugin.addRequiredOption(conf);
+
+        MutuallyExclusiveOptions exclOpts = new MutuallyExclusiveOptions(interactive, list, helpPlugin);
 
         //conf.addRequiredOption(exclOpts);
 
@@ -48,6 +52,7 @@ public class Parser {
         p.addOption(rootOpts);
         p.addOption(exclOpts);
 
-        p.parse(new String[]{"--conf", "myconf.ini", "--interactive"});
+        p.parse(new String[]{"--conf", "myconf.ini", "--pluginHelp"});
+        //p.parse(new String[]{});
     }
 }

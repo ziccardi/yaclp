@@ -9,6 +9,8 @@ public class MutuallyExclusiveOptions implements IOption {
 
     private IOption[] options;
 
+    private boolean mandatory = false;
+
     public MutuallyExclusiveOptions (IOption... options) {
         this.options = options;
     }
@@ -34,6 +36,10 @@ public class MutuallyExclusiveOptions implements IOption {
         // Ok, only at most one is present...
         if (passedInOption != null) {
             passedInOption.consume(args, res);
+        } else {
+            if (mandatory) {
+                throw new IllegalStateException("Mandatory option missing");
+            }
         }
     }
 
@@ -57,5 +63,13 @@ public class MutuallyExclusiveOptions implements IOption {
 
     public void setArgument(Argument arg) {
 
+    }
+
+    public boolean isMandatory() {
+        return mandatory;
+    }
+
+    public void setMandatory(boolean mandatory) {
+        this.mandatory = mandatory;
     }
 }

@@ -16,4 +16,6 @@ public interface IOption {
     public String getLongName();
 
     public void setArgument(Argument arg);
+
+    public boolean isMandatory();
 }

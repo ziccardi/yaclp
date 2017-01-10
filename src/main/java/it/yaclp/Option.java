@@ -10,7 +10,7 @@ public class Option implements IOption {
     private final String shortName;
     private final String longName;
 
-    private boolean hasArgs = false;
+    private boolean mandatory = false;
 
     public Option(final String shortName, final String longName) {
         this.shortName = shortName;
@@ -23,6 +23,9 @@ public class Option implements IOption {
 
     public void consume(List<String> args, Result res) {
         if (!isPresent(args)) {
+            if (mandatory) {
+                throw new IllegalStateException("Mandatory option " + getLongName() + " is missing");
+            }
             return;
         }
         for (IOption requiredOption : requiredOptions) {
@@ -64,5 +67,13 @@ public class Option implements IOption {
 
     public void setArgument(Argument arg) {
         this.optionArgs = arg;
+    }
+
+    public boolean isMandatory() {
+        return mandatory;
+    }
+
+    public void setMandatory(boolean mandatory) {
+        this.mandatory = mandatory;
     }
 }
