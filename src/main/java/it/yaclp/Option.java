@@ -8,15 +8,17 @@ public class Option implements IOption {
     private Argument optionArgs = null;
 
     private final String shortName;
+    private final String longName;
 
     private boolean hasArgs = false;
 
-    public Option(final String shortName) {
+    public Option(final String shortName, final String longName) {
         this.shortName = shortName;
+        this.longName = longName;
     }
 
     public boolean isPresent(List<String> args) {
-        return args.contains(shortName);
+        return args.contains(shortName) || args.contains(longName);
     }
 
     public void consume(List<String> args, Result res) {
@@ -35,10 +37,10 @@ public class Option implements IOption {
         }
 
         for (int i = 0; i < args.size(); i++) {
-            if (args.get(i).equals(shortName)) {
+            if (args.get(i).equals(shortName) || args.get(i).equals(longName)) {
                 // consume and manage it
                 args.remove(i);
-                res.addValue(shortName, "true");
+                res.addValue(this, "true");
                 if (optionArgs != null) {
                     optionArgs.consume(this, args, i, res);
                 }
@@ -54,6 +56,10 @@ public class Option implements IOption {
 
     public String getShortName() {
         return shortName;
+    }
+
+    public String getLongName() {
+        return longName;
     }
 
     public void setArgument(Argument arg) {

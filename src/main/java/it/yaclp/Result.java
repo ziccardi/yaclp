@@ -9,12 +9,13 @@ import java.util.Map;
 public class Result {
     private Map<String, String> parmAndValue = new HashMap<String, String>();
 
-    public void addValue(String param, String value) {
-        parmAndValue.put(param, value);
+    public void addValue(IOption option, String value) {
+        parmAndValue.put(option.getShortName(), value);
+        parmAndValue.put(option.getLongName(), value);
     }
 
     public String getValue(String param) {
-        return param;
+        return parmAndValue.get(param);
     }
 
     public boolean hasOption(String name) {

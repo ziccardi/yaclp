@@ -27,17 +27,17 @@ public class Parser {
 
     public static void main(String[] args) {
 
-        Option version = new Option("-v");
-        Option help = new Option("-h");
-        Option conf = new Option("-c");
+        Option version = new Option("-v", "--version");
+        Option help = new Option("-h", "--help");
+        Option conf = new Option("-c", "--conf");
         conf.setArgument(new Argument(true));
 
         MutuallyExclusiveOptions rootOpts = new MutuallyExclusiveOptions(help, version, conf);
 
-        Option interactive = new Option("-i");
+        Option interactive = new Option("-i", "--interactive");
         interactive.addRequiredOption(conf);
 
-        Option list = new Option("-l");
+        Option list = new Option("-l", "--list");
         list.addRequiredOption(conf);
 
         MutuallyExclusiveOptions exclOpts = new MutuallyExclusiveOptions(interactive, list);
@@ -48,6 +48,6 @@ public class Parser {
         p.addOption(rootOpts);
         p.addOption(exclOpts);
 
-        p.parse(new String[]{"-c", "myconf.ini", "-i"});
+        p.parse(new String[]{"--conf", "myconf.ini", "--interactive"});
     }
 }

@@ -15,7 +15,7 @@ public class Argument {
     public void consume(IOption option, List<String> args, int pos, Result res) {
         if (pos < args.size()) {
             if (!args.get(pos).startsWith("-")) {
-                res.addValue(option.getShortName(), args.remove(pos));
+                res.addValue(option, args.remove(pos));
             } else {
                 if (mandatory) {
                     throw new IllegalStateException("Mandatory arg for " + option.getShortName() + " not present");
