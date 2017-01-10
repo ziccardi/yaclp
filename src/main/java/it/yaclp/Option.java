@@ -3,12 +3,14 @@ package it.yaclp;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Option implements IOption {
+class Option implements IOption {
     private List<IOption> requiredOptions = new ArrayList<IOption>();
     private Argument optionArgs = null;
 
     private final String shortName;
     private final String longName;
+
+    private String description = "";
 
     private boolean mandatory = false;
     private boolean multiple = false;
@@ -24,7 +26,7 @@ public class Option implements IOption {
 
     public void consume(List<String> args, CommandLine res) throws ParsingException{
         if (!isPresent(args)) {
-            if (mandatory) {
+            if (mandatory && !res.hasOption(getShortName())) {
                 throw new ParsingException("Mandatory option [%s] is missing", getLongName());
             }
             return;
@@ -71,8 +73,8 @@ public class Option implements IOption {
         return longName;
     }
 
-    public void setArgument(Argument arg) {
-        this.optionArgs = arg;
+    public void setArgument(IArgument arg) {
+        this.optionArgs = (Argument) arg;
     }
 
     public boolean isMandatory() {
@@ -85,5 +87,22 @@ public class Option implements IOption {
 
     public void setMultiple(boolean multiple) {
         this.multiple = multiple;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    @Override
+    public String toString() {
+        if (this.optionArgs == null) {
+            return String.format("%s (%s)", longName, shortName);
+        } else {
+            return String.format("%s (%s) <%s>", longName, shortName, optionArgs.getName());
+        }
     }
 }

@@ -44,11 +44,15 @@ public interface IOption {
      * Configures the arguments of this option.
      * @param arg the arguments of this option
      */
-    void setArgument(Argument arg);
+    void setArgument(IArgument arg);
 
     /**
      * Checks if this option is mandatory
      * @return  true or false
      */
     boolean isMandatory();
+
+    void setDescription(String description);
+
+    String getDescription();
 }

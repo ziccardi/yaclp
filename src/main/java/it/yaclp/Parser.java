@@ -12,6 +12,10 @@ public class Parser {
         this.options.add(option);
     }
 
+    List<IOption> getOptions() {
+        return options;
+    }
+
     public CommandLine parse(String[] args) throws ParsingException{
         List<String> argsList = new LinkedList<String>(Arrays.asList(args));
 
@@ -27,36 +31,76 @@ public class Parser {
         return res;
     }
 
-    public static void main(String[] args) throws ParsingException {
+    public static void main(String[] args) {
 
-        Option version = new Option("-v", "--version");
-        Option help = new Option("-h", "--help");
-        Option conf = new Option("-c", "--conf");
-        conf.setArgument(new Argument(true));
+        IOption version = OptionBuilder.forOption("-v", "--version")
+            .description("Print the server version number")
+            .build();
 
-        MutuallyExclusiveOptions rootOpts = new MutuallyExclusiveOptions(help, version, conf);
-        rootOpts.setMandatory(true);
+        IOption help = OptionBuilder.forOption("-h", "--help")
+            .description("Print this help")
+            .build();
 
-        Option interactive = new Option("-i", "--interactive");
-        interactive.addRequiredOption(conf);
+        IOption conf = OptionBuilder.forOption("-c", "--conf")
+            .description("Specifies the JNRPE configuration file")
+            .argument(ArgumentBuilder.forArgument("path").mandatory(true).build())
+            .build();
 
-        Option list = new Option("-l", "--list");
-        list.addRequiredOption(conf);
+        IOption rootOpts = OptionBuilder.forMutuallyExclusiveOption()
+            .withOption(help)
+            .withOption(version)
+            .withOption(conf)
+            .mandatory(true)
+            .build();
 
-        Option helpPlugin = new Option("-H", "--pluginHelp");
-        helpPlugin.addRequiredOption(conf);
+        IOption interactive = OptionBuilder.forOption("-i", "--interactive")
+            .requires(conf)
+            .description("Starts JNRPE in command line mode")
+            .build();
 
-        MutuallyExclusiveOptions exclOpts = new MutuallyExclusiveOptions(interactive, list, helpPlugin);
+        IOption list = OptionBuilder.forOption("-l", "--list")
+            .requires(conf)
+            .description("Lists all the installed plugins")
+            .build();
+
+        IOption helpPlugin = OptionBuilder.forOption("-H", "--pluginHelp")
+            .requires(conf)
+            .description("Print help about a given plugin")
+            .build();
+
+        IOption exclOpts = OptionBuilder.forMutuallyExclusiveOption()
+            .withOption(interactive)
+            .withOption(list)
+            .withOption(helpPlugin)
+            .build();
 
         Parser p = new Parser();
         p.addOption(rootOpts);
         p.addOption(exclOpts);
 
-        CommandLine cl = p.parse(new String[]{"--conf", "myconf.ini", "--pluginHelp"});
+
+
+
+
+
+
+        try {
+            //CommandLine cl = p.parse(new String[]{"--conf", "myconf.ini", "--pluginHelp"});
+            CommandLine cl = p.parse(new String[]{"--conf"});
+        } catch (ParsingException pe) {
+            System.out.println("Error - " + pe.getMessage());
+
+            HelpFormatter hf = new HelpFormatter("test", p);
+            hf.printUsage(System.out);
+            hf.printHelp(System.out);
+
+        }
+
         //p.parse(new String[]{"--conf", "myconf.ini", "--pluginHelp", "--list"});
         //p.parse(new String[]{});
 
-        System.out.println (cl.getValues("--conf")[0]);
-        System.out.println (cl.getValue("-c"));
+//        System.out.println (cl.getValues("--conf")[0]);
+//        System.out.println (cl.getValue("-c"));
+
     }
 }

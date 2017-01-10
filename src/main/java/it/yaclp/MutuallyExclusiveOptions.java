@@ -4,7 +4,7 @@ import org.apache.commons.lang.StringUtils;
 
 import java.util.List;
 
-public class MutuallyExclusiveOptions implements IOption {
+class MutuallyExclusiveOptions implements IOption {
 
     private IOption[] options;
 
@@ -61,6 +61,36 @@ public class MutuallyExclusiveOptions implements IOption {
         return present;
     }
 
+    public boolean isMandatory() {
+        return mandatory;
+    }
+
+    public void setMandatory(boolean mandatory) {
+        this.mandatory = mandatory;
+    }
+
+    @Override
+    public String toString() {
+        String[] params = new String[options.length];
+        for (int i = 0; i < params.length; i++) {
+            IOption opt = options[i];
+            params[i] = opt.toString();
+        }
+
+        return String.format("[%s]", StringUtils.join(params, " | "));
+    }
+
+    IOption[] getOptions() {
+        return options;
+    }
+
+    public void setDescription(String description) {
+    }
+
+    public String getDescription() {
+        return null;
+    }
+
     public String getShortName() {
         return null;
     }
@@ -69,15 +99,6 @@ public class MutuallyExclusiveOptions implements IOption {
         return null;
     }
 
-    public void setArgument(Argument arg) {
+    public void setArgument(IArgument arg) {}
 
-    }
-
-    public boolean isMandatory() {
-        return mandatory;
-    }
-
-    public void setMandatory(boolean mandatory) {
-        this.mandatory = mandatory;
-    }
 }
