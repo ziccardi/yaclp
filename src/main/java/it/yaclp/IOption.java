@@ -3,19 +3,52 @@ package it.yaclp;
 import java.util.List;
 
 /**
- * Created by ziccardi on 10/01/2017.
+ * Generic option interface.
  */
 public interface IOption {
-    public boolean isPresent(List<String> args);
+    /**
+     * Checks if the option is present in the given command line.
+     * @param args the command line
+     * @return true or false
+     */
+    boolean isPresent(List<String> args);
 
-    public void consume(List<String> args, Result res) throws ParsingException;
+    /**
+     * Consumes the passed in command line by parsing the option and removing it.
+     *
+     * @param args the command line. It gets changed by the method.
+     * @param res the result of the parsing
+     * @throws ParsingException on any error parsing the command line
+     */
+    void consume(List<String> args, CommandLine res) throws ParsingException;
 
-    public void addRequiredOption(IOption option);
+    /**
+     * Sets the dependency from this option to another one.
+     * @param option option to depend on
+     */
+    void addRequiredOption(IOption option);
 
-    public String getShortName();
-    public String getLongName();
+    /**
+     * Returns the short name for this option.
+     * @return the short name for this option
+     */
+    String getShortName();
 
-    public void setArgument(Argument arg);
+    /**
+     * Returns the long name for this option.
+     * @return Returns the long name for this option.
+     */
+    String getLongName();
 
-    public boolean isMandatory();
+    /**
+     * Configures the arguments of this option.
+     * @param arg the arguments of this option
+     */
+    void setArgument(Argument arg);
+
+    /**
+     * Checks if this option is mandatory
+     * @return  true or false
+     */
+    boolean isMandatory();
 }

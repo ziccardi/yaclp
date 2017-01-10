@@ -27,7 +27,7 @@ public class MutuallyExclusiveOptions implements IOption {
         return StringUtils.join(params, separator);
     }
 
-    public void consume(List<String> args, Result res) throws ParsingException{
+    public void consume(List<String> args, CommandLine res) throws ParsingException{
         // Only one must be present...
         IOption passedInOption = null;
 

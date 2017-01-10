@@ -12,10 +12,10 @@ public class Parser {
         this.options.add(option);
     }
 
-    public void parse(String[] args) throws ParsingException{
+    public CommandLine parse(String[] args) throws ParsingException{
         List<String> argsList = new LinkedList<String>(Arrays.asList(args));
 
-        Result res = new Result();
+        CommandLine res = new CommandLine();
         for (IOption opt: options) {
             opt.consume(argsList, res);
         }
@@ -23,6 +23,8 @@ public class Parser {
         if (!argsList.isEmpty()) {
             throw new ParsingException("Unexpected tokens: " + argsList);
         }
+
+        return res;
     }
 
     public static void main(String[] args) throws ParsingException {
@@ -50,8 +52,11 @@ public class Parser {
         p.addOption(rootOpts);
         p.addOption(exclOpts);
 
-        //p.parse(new String[]{"--conf", "myconf.ini", "--pluginHelp"});
-        p.parse(new String[]{"--conf", "myconf.ini", "--pluginHelp", "--list"});
+        CommandLine cl = p.parse(new String[]{"--conf", "myconf.ini", "--pluginHelp"});
+        //p.parse(new String[]{"--conf", "myconf.ini", "--pluginHelp", "--list"});
         //p.parse(new String[]{});
+
+        System.out.println (cl.getValues("--conf")[0]);
+        System.out.println (cl.getValue("-c"));
     }
 }

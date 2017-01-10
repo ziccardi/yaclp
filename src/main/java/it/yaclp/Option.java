@@ -11,6 +11,7 @@ public class Option implements IOption {
     private final String longName;
 
     private boolean mandatory = false;
+    private boolean multiple = false;
 
     public Option(final String shortName, final String longName) {
         this.shortName = shortName;
@@ -21,13 +22,18 @@ public class Option implements IOption {
         return args.contains(shortName) || args.contains(longName);
     }
 
-    public void consume(List<String> args, Result res) throws ParsingException{
+    public void consume(List<String> args, CommandLine res) throws ParsingException{
         if (!isPresent(args)) {
             if (mandatory) {
                 throw new ParsingException("Mandatory option [%s] is missing", getLongName());
             }
             return;
         }
+
+        if (res.hasOption(getShortName()) && !multiple) {
+            throw new ParsingException("Option [%s] can be specified only one time", getLongName());
+        }
+
         for (IOption requiredOption : requiredOptions) {
             if (requiredOption.isPresent(args)) {
                 requiredOption.consume(args, res);
@@ -43,7 +49,7 @@ public class Option implements IOption {
             if (args.get(i).equals(shortName) || args.get(i).equals(longName)) {
                 // consume and manage it
                 args.remove(i);
-                res.addValue(this, "true");
+                res.addValue(this, null);
                 if (optionArgs != null) {
                     optionArgs.consume(this, args, i, res);
                 }
@@ -75,5 +81,9 @@ public class Option implements IOption {
 
     public void setMandatory(boolean mandatory) {
         this.mandatory = mandatory;
+    }
+
+    public void setMultiple(boolean multiple) {
+        this.multiple = multiple;
     }
 }
