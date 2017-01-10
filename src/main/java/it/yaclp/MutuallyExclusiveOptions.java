@@ -1,10 +1,9 @@
 package it.yaclp;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.util.List;
 
-/**
- * Created by ziccardi on 10/01/2017.
- */
 public class MutuallyExclusiveOptions implements IOption {
 
     private IOption[] options;
@@ -19,14 +18,23 @@ public class MutuallyExclusiveOptions implements IOption {
 
     }
 
-    public void consume(List<String> args, Result res) {
+    private String getOptionNames(String separator) {
+        String[] params = new String[options.length];
+        for (int i = 0; i < params.length; ) {
+            params[i] = options[i++].getLongName();
+        }
+
+        return StringUtils.join(params, separator);
+    }
+
+    public void consume(List<String> args, Result res) throws ParsingException{
         // Only one must be present...
         IOption passedInOption = null;
 
         for (IOption opt : options) {
             if (opt.isPresent(args)) {
                 if (passedInOption != null) {
-                    throw new IllegalStateException("Incompatible options present");
+                    throw new ParsingException("Incompatible options present: only one of [%s] must be specified", getOptionNames(","));
                 } else {
                     passedInOption = opt;
                 }
@@ -38,7 +46,7 @@ public class MutuallyExclusiveOptions implements IOption {
             passedInOption.consume(args, res);
         } else {
             if (mandatory) {
-                throw new IllegalStateException("Mandatory option missing");
+                throw new ParsingException("Mandatory option missing: one of [%s] must be passed", getOptionNames(","));
             }
         }
     }

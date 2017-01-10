@@ -8,7 +8,7 @@ import java.util.List;
 public interface IOption {
     public boolean isPresent(List<String> args);
 
-    public void consume(List<String> args, Result res);
+    public void consume(List<String> args, Result res) throws ParsingException;
 
     public void addRequiredOption(IOption option);
 

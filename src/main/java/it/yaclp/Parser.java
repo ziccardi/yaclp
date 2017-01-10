@@ -12,7 +12,7 @@ public class Parser {
         this.options.add(option);
     }
 
-    public void parse(String[] args) {
+    public void parse(String[] args) throws ParsingException{
         List<String> argsList = new LinkedList<String>(Arrays.asList(args));
 
         Result res = new Result();
@@ -21,11 +21,11 @@ public class Parser {
         }
 
         if (!argsList.isEmpty()) {
-            throw new IllegalStateException("Unexpected tokens: " + argsList);
+            throw new ParsingException("Unexpected tokens: " + argsList);
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ParsingException {
 
         Option version = new Option("-v", "--version");
         Option help = new Option("-h", "--help");
@@ -46,13 +46,12 @@ public class Parser {
 
         MutuallyExclusiveOptions exclOpts = new MutuallyExclusiveOptions(interactive, list, helpPlugin);
 
-        //conf.addRequiredOption(exclOpts);
-
         Parser p = new Parser();
         p.addOption(rootOpts);
         p.addOption(exclOpts);
 
-        p.parse(new String[]{"--conf", "myconf.ini", "--pluginHelp"});
+        //p.parse(new String[]{"--conf", "myconf.ini", "--pluginHelp"});
+        p.parse(new String[]{"--conf", "myconf.ini", "--pluginHelp", "--list"});
         //p.parse(new String[]{});
     }
 }

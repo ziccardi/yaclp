@@ -12,18 +12,18 @@ public class Argument {
         this.mandatory = mandatory;
     }
 
-    public void consume(IOption option, List<String> args, int pos, Result res) {
+    public void consume(IOption option, List<String> args, int pos, Result res) throws ParsingException {
         if (pos < args.size()) {
             if (!args.get(pos).startsWith("-")) {
                 res.addValue(option, args.remove(pos));
             } else {
                 if (mandatory) {
-                    throw new IllegalStateException("Mandatory arg for " + option.getShortName() + " not present");
+                    throw new ParsingException("Mandatory argument for option [%s] is not present", option.getLongName());
                 }
             }
         } else {
             if (mandatory) {
-                throw new IllegalStateException("Mandatory arg for " + option.getShortName() + " not present");
+                throw new ParsingException("Mandatory argument for option [%s] is not present", option.getLongName());
             }
         }
     }

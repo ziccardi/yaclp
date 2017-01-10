@@ -21,10 +21,10 @@ public class Option implements IOption {
         return args.contains(shortName) || args.contains(longName);
     }
 
-    public void consume(List<String> args, Result res) {
+    public void consume(List<String> args, Result res) throws ParsingException{
         if (!isPresent(args)) {
             if (mandatory) {
-                throw new IllegalStateException("Mandatory option " + getLongName() + " is missing");
+                throw new ParsingException("Mandatory option [%s] is missing", getLongName());
             }
             return;
         }
@@ -35,7 +35,7 @@ public class Option implements IOption {
                 if (res.hasOption(requiredOption.getShortName())) {
                     continue;
                 }
-                throw new IllegalStateException(shortName + " requires " + requiredOption.getShortName());
+                throw new ParsingException("%s requires [%s]", longName, requiredOption.getLongName());
             }
         }
 
