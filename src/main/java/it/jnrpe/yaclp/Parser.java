@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * Copyright (c) 2017 Massimiliano Ziccardi
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *******************************************************************************/
 package it.jnrpe.yaclp;
 
 import java.util.ArrayList;
@@ -5,9 +20,17 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Parse a command line.
+ */
 public class Parser {
     private List<IOption> options = new ArrayList<IOption>();
 
+    /**
+     * Ad an option to the list of supported options.
+     * It can be a simple option ({@link Option}) or a mutually exclusive option ({@link MutuallyExclusiveOptions})
+     * @param option the option to be added to the parser
+     */
     public void addOption(IOption option) {
         this.options.add(option);
     }
@@ -16,6 +39,12 @@ public class Parser {
         return options;
     }
 
+    /**
+     * Parses the command line and returns a {@link CommandLine} object if the parsing succeeds.
+     * @param args the command line to be parsed
+     * @return the parsed command line
+     * @throws ParsingException if the command line is not valid according to the parser configuration
+     */
     public CommandLine parse(String[] args) throws ParsingException{
         List<String> argsList = new LinkedList<String>(Arrays.asList(args));
 
@@ -29,78 +58,5 @@ public class Parser {
         }
 
         return res;
-    }
-
-    public static void main(String[] args) {
-
-        IOption version = OptionBuilder.forOption("-v", "--version")
-            .description("Print the server version number")
-            .build();
-
-        IOption help = OptionBuilder.forOption("-h", "--help")
-            .description("Print this help")
-            .build();
-
-        IOption conf = OptionBuilder.forOption("-c", "--conf")
-            .description("Specifies the JNRPE configuration file")
-            .argument(ArgumentBuilder.forArgument("path").mandatory(true).build())
-            .build();
-
-        IOption rootOpts = OptionBuilder.forMutuallyExclusiveOption()
-            .withOption(help)
-            .withOption(version)
-            .withOption(conf)
-            .mandatory(true)
-            .build();
-
-        IOption interactive = OptionBuilder.forOption("-i", "--interactive")
-            .requires(conf)
-            .description("Starts JNRPE in command line mode")
-            .build();
-
-        IOption list = OptionBuilder.forOption("-l", "--list")
-            .requires(conf)
-            .description("Lists all the installed plugins")
-            .build();
-
-        IOption helpPlugin = OptionBuilder.forOption("-H", "--pluginHelp")
-            .requires(conf)
-            .description("Print help about a given plugin")
-            .build();
-
-        IOption exclOpts = OptionBuilder.forMutuallyExclusiveOption()
-            .withOption(interactive)
-            .withOption(list)
-            .withOption(helpPlugin)
-            .build();
-
-        Parser p = new Parser();
-        p.addOption(rootOpts);
-        p.addOption(exclOpts);
-
-
-
-
-
-
-
-        try {
-            //CommandLine cl = p.parse(new String[]{"--conf", "myconf.ini", "--pluginHelp"});
-            CommandLine cl = p.parse(new String[]{"--conf"});
-        } catch (ParsingException pe) {
-            System.out.println("Error - " + pe.getMessage());
-
-            HelpFormatter hf = new HelpFormatter("test", p);
-            hf.printUsage(System.out);
-            hf.printHelp(System.out);
-
-        }
-
-        //p.parse(new String[]{"--conf", "myconf.ini", "--pluginHelp", "--list"});
-        //p.parse(new String[]{});
-
-//        System.out.println (cl.getValues("--conf")[0]);
-//        System.out.println (cl.getValue("-c"));
-
     }
 }
