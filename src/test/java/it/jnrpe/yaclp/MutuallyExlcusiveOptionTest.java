@@ -1,4 +1,4 @@
-package it.yaclp;
+package it.jnrpe.yaclp;
 
 import org.junit.Test;
 

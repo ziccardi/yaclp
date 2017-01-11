@@ -1,4 +1,4 @@
-package it.yaclp;
+package it.jnrpe.yaclp;
 
 public class ParsingException extends Exception {
     public ParsingException(String msg) {

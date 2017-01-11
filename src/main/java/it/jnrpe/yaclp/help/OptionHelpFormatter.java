@@ -1,6 +1,6 @@
-package it.yaclp.help;
+package it.jnrpe.yaclp.help;
 
-import it.yaclp.IOption;
+import it.jnrpe.yaclp.IOption;
 
 public class OptionHelpFormatter {
     private final int indent;

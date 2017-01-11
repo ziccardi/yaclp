@@ -1,4 +1,4 @@
-package it.yaclp;
+package it.jnrpe.yaclp;
 
 /**
  * Created by ziccardi on 11/01/2017.

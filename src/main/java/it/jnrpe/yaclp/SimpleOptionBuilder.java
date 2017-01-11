@@ -1,4 +1,4 @@
-package it.yaclp;
+package it.jnrpe.yaclp;
 
 import java.util.ArrayList;
 import java.util.List;

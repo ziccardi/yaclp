@@ -1,4 +1,4 @@
-package it.yaclp;
+package it.jnrpe.yaclp;
 
 public class ArgumentBuilder {
     private final String name;

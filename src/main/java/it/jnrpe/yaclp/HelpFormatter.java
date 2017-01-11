@@ -1,6 +1,6 @@
-package it.yaclp;
+package it.jnrpe.yaclp;
 
-import it.yaclp.help.OptionHelpFormatter;
+import it.jnrpe.yaclp.help.OptionHelpFormatter;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.PrintStream;
