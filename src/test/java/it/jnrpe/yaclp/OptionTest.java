@@ -87,30 +87,4 @@ public class OptionTest {
 
         Assert.assertTrue(cl.getValues(option.getShortName()).length == 2);
     }
-
-    @Test(expected = ParsingException.class)
-    public void testMissingMandatoryArg() throws Exception {
-        IOption option = OptionBuilder.forOption("-m", "--mandatory")
-            .mandatory(true)
-            .multiplicity(true)
-            .argument(ArgumentBuilder.forArgument("myarg").build())
-            .build();
-
-        List<String> args = new ArrayList<String>();
-        args.addAll(Arrays.asList("--mandatory"));
-        option.consume(args, new CommandLine());
-    }
-
-    @Test
-    public void testMissingOptionalArg() throws Exception {
-        IOption option = OptionBuilder.forOption("-m", "--mandatory")
-            .mandatory(true)
-            .multiplicity(true)
-            .argument(ArgumentBuilder.forArgument("myarg").mandatory(false).build())
-            .build();
-
-        List<String> args = new ArrayList<String>();
-        args.addAll(Arrays.asList("--mandatory"));
-        option.consume(args, new CommandLine());
-    }
 }

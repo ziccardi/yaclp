@@ -15,6 +15,8 @@
  *******************************************************************************/
 package it.jnrpe.yaclp;
 
+import it.jnrpe.yaclp.validators.IArgumentValidator;
+
 import java.util.List;
 
 /**
@@ -24,20 +26,29 @@ class Argument implements IArgument {
     private final boolean mandatory;
     private final String name;
 
+    private final IArgumentValidator[] validators;
+
     /**
      * Create a new argument object
      * @param mandatory <code>true</code> if the argument is mandatory
      */
-    public Argument(final String name, final boolean mandatory) {
+    Argument(final String name, final boolean mandatory, IArgumentValidator... validators) {
         this.mandatory = mandatory;
         this.name = name;
+        this.validators = validators;
     }
 
     public void consume(IOption option, List<String> args, int pos, CommandLine res) throws ParsingException {
         if (pos < args.size()) {
             // An argument must not start with '-'
             if (!args.get(pos).startsWith("-")) {
-                res.addValue(option, args.remove(pos));
+                String value = args.remove(pos);
+
+                for (IArgumentValidator validator : validators) {
+                    validator.validate(value);
+                }
+
+                res.addValue(option, value);
             } else {
                 if (mandatory) {
                     throw new ParsingException("Mandatory argument <%s> for option <%s> is not present", getName(), option.getLongName());

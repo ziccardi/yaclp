@@ -13,14 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
-package it.jnrpe.yaclp;
+package it.jnrpe.yaclp.validators;
 
-public class ParsingException extends Exception {
-    public ParsingException(String msg) {
-        super(msg);
-    }
+import it.jnrpe.yaclp.ParsingException;
 
-    public ParsingException(String pattern, Object... values) {
-        super(String.format(pattern, values));
-    }
+public interface IArgumentValidator {
+    void validate(final String value) throws ParsingException;
 }

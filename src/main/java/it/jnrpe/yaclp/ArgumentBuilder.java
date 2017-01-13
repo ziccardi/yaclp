@@ -15,12 +15,18 @@
  *******************************************************************************/
 package it.jnrpe.yaclp;
 
+import it.jnrpe.yaclp.validators.IArgumentValidator;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Builds an argument parser.
  */
 public class ArgumentBuilder {
     private final String name;
     private boolean mandatory = true;
+    private List<IArgumentValidator> validators = new ArrayList<IArgumentValidator>();
 
     private ArgumentBuilder(final String name) {
         this.name = name;
@@ -46,10 +52,22 @@ public class ArgumentBuilder {
     }
 
     /**
+     * Adds a validator to the list of validators for this argument.
+     * You can call this method as many times as needed to add validators: they will be
+     * executed in the order they have been inserted.
+     * @param validator the validator to be added
+     * @return the builder
+     */
+    public ArgumentBuilder withValidator(IArgumentValidator validator) {
+        this.validators.add(validator);
+        return this;
+    }
+
+    /**
      * Builds the argument with the provided options.
      * @return the newly build argument
      */
     public IArgument build() {
-        return new Argument(name, mandatory);
+        return new Argument(name, mandatory, validators.toArray(new IArgumentValidator[validators.size()]));
     }
 }
