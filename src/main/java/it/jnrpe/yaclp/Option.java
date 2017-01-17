@@ -114,10 +114,18 @@ class Option implements IOption {
 
     @Override
     public String toString() {
-        if (this.optionArgs == null) {
-            return String.format("%s (%s)", longName, shortName);
+        if (!longName.equals(shortName)) {
+            if (this.optionArgs == null) {
+                return String.format("%s (%s)", longName, shortName);
+            } else {
+                return String.format("%s (%s) <%s>", longName, shortName, optionArgs.getName());
+            }
         } else {
-            return String.format("%s (%s) <%s>", longName, shortName, optionArgs.getName());
+            if (this.optionArgs == null) {
+                return String.format("%s", shortName);
+            } else {
+                return String.format("%s <%s>", shortName, optionArgs.getName());
+            }
         }
     }
 }

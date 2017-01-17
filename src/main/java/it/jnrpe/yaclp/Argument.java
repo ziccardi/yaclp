@@ -38,7 +38,7 @@ class Argument implements IArgument {
         this.validators = validators;
     }
 
-    public void consume(IOption option, List<String> args, int pos, CommandLine res) throws ParsingException {
+    public final void consume(IOption option, List<String> args, int pos, CommandLine res) throws ParsingException {
         if (pos < args.size()) {
             // An argument must not start with '-'
             if (!args.get(pos).startsWith("-")) {
@@ -48,7 +48,7 @@ class Argument implements IArgument {
                     validator.validate(value);
                 }
 
-                res.addValue(option, value);
+                saveValue(res, option, value);
             } else {
                 if (mandatory) {
                     throw new ParsingException("Mandatory argument <%s> for option <%s> is not present", getName(), option.getLongName());
@@ -59,6 +59,10 @@ class Argument implements IArgument {
                 throw new ParsingException("Mandatory argument <%s> for option <%s> is not present", getName(), option.getLongName());
             }
         }
+    }
+
+    protected void saveValue(final CommandLine res, IOption option, final String value) throws ParsingException {
+        res.addValue(option, value);
     }
 
     public String getName() {

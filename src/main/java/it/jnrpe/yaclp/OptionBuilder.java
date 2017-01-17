@@ -24,6 +24,10 @@ public class OptionBuilder {
         return new SimpleOptionBuilder(shortName, longName);
     }
 
+    public static PropertyOptionBuilder forPropertyOption(final String shortName){
+        return new PropertyOptionBuilder(shortName);
+    }
+
     public static MutuallyExclusiveOptionBuilder forMutuallyExclusiveOption(){
         return new MutuallyExclusiveOptionBuilder();
     }

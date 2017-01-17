@@ -15,10 +15,7 @@
  *******************************************************************************/
 package it.jnrpe.yaclp;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Contains the parsed command line
@@ -28,6 +25,8 @@ public class CommandLine {
      * All the parsed options, together with its values
      */
     private Map<String, List<String>> parmAndValue = new HashMap<String, List<String>>();
+
+    private Map<String, Properties> propertyParams = new HashMap<String, Properties>();
 
     /**
      * Adds a new value for the given option
@@ -57,6 +56,16 @@ public class CommandLine {
         addValue(parmAndValue, option.getLongName(), value);
     }
 
+    void addProperty(final IOption option, final String key, final String value) {
+        Properties props = propertyParams.get(option.getShortName());
+        if (props == null) {
+            props = new Properties();
+            propertyParams.put(option.getShortName(), props);
+        }
+
+        props.setProperty(key, value);
+    }
+
     /**
      * Returns teh first value for the given option name
      * @param param the option name
@@ -83,6 +92,10 @@ public class CommandLine {
         }
 
         return values.toArray(new String[values.size()]);
+    }
+
+    public Properties getProperties(String optionName) {
+        return propertyParams.get(optionName);
     }
 
     /**
