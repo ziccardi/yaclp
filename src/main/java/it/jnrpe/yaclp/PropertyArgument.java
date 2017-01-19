@@ -17,31 +17,34 @@ package it.jnrpe.yaclp;
 
 import it.jnrpe.yaclp.validators.IArgumentValidator;
 
+import java.util.regex.Pattern;
+
 /**
  * Represent an argument in the form 'key=value'
  */
 class PropertyArgument extends Argument {
 
-    private final String KEYVALUE_SEPARATOR = "=";
+    private final String keyValueSeparator;
     private final IArgumentValidator[] validators;
 
-    PropertyArgument(final String name, final boolean mandatory, IArgumentValidator... validators) {
+    PropertyArgument(final String name, String keyValueSeparator, IArgumentValidator... validators) {
         // Value must be extracted from the key=value string. We will manage validation locally.
         super(name, true, new IArgumentValidator[0]);
         this.validators = validators;
+        this.keyValueSeparator = keyValueSeparator;
     }
 
     @Override
     protected void saveValue(CommandLine res, IOption option, String value) throws ParsingException {
 
-        int pos = value.indexOf(KEYVALUE_SEPARATOR);
+        int pos = value.indexOf(keyValueSeparator);
 
         if (pos < 1 || pos >= (value.length() - 1)) {
-            throw new ParsingException("Argument <%s> for option <%s> must be in format key=value", getName(), option.getLongName());
+            throw new ParsingException("Argument <%s> for option <%s> must be in format key%svalue", getName(), option.getLongName(), keyValueSeparator);
         }
 
         // Value is in the correct format
-        String[] keyValuePair = value.split(KEYVALUE_SEPARATOR, 2);
+        String[] keyValuePair = value.split(Pattern.quote(keyValueSeparator), 2);
 
         // Validate value
         for (IArgumentValidator validator : validators) {

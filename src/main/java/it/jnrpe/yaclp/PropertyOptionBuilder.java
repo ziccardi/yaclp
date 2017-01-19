@@ -17,6 +17,7 @@ package it.jnrpe.yaclp;
 
 import it.jnrpe.yaclp.validators.IArgumentValidator;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,7 +28,7 @@ import java.util.List;
 public class PropertyOptionBuilder {
 
     private final SimpleOptionBuilder simpleOptionBuilder;
-
+    private String keyValueSeparator = "=";
     private List<IArgumentValidator> argValidators = new ArrayList<IArgumentValidator>();
 
     PropertyOptionBuilder(final String shortName) {
@@ -86,13 +87,20 @@ public class PropertyOptionBuilder {
         return this;
     }
 
+    public PropertyOptionBuilder withValueSeparator(final String separator) {
+        this.keyValueSeparator = separator;
+        return this;
+    }
+
     /**
      * Builds a new Option configured accordingly with the received parameters.
      * @return the newly build option
      */
     public IOption build() {
+        final String argName = MessageFormat.format("<property>{0}<value>", keyValueSeparator);
+
         return simpleOptionBuilder
-            .argument(new PropertyArgument("key=value", true, new IArgumentValidator[0]))
+            .argument(new PropertyArgument(argName, keyValueSeparator))
             .build();
     }
 }
