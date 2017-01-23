@@ -15,8 +15,6 @@
  *******************************************************************************/
 package it.jnrpe.yaclp;
 
-import org.apache.commons.lang.StringUtils;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -34,7 +32,7 @@ class MutuallyExclusiveOptions extends AbstractOption {
             params[i] = options[i++].getLongName();
         }
 
-        return StringUtils.join(params, separator);
+        return String.join(separator, params);
     }
 
     public void consume(List<String> args, CommandLine res) throws ParsingException{
@@ -79,7 +77,7 @@ class MutuallyExclusiveOptions extends AbstractOption {
             params[i] = opt.toString();
         }
 
-        return String.format("[%s]", StringUtils.join(params, " | "));
+        return String.format("[%s]", String.join(" | ", params));
     }
 
     IOption[] getOptions() {

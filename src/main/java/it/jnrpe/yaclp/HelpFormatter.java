@@ -16,7 +16,6 @@
 package it.jnrpe.yaclp;
 
 import it.jnrpe.yaclp.help.OptionHelpFormatter;
-import org.apache.commons.lang.StringUtils;
 
 import java.io.PrintStream;
 import java.util.List;
@@ -75,7 +74,7 @@ public class HelpFormatter {
             opts[i] = options.get(i).toString() + " ";
         }
 
-        return String.format("  %s %s", appName, StringUtils.join(opts));
+        return String.format("  %s %s", appName, String.join(" ", opts));
     }
 
     public void printUsage(PrintStream pw) {
