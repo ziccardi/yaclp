@@ -43,7 +43,7 @@ public class SimpleOptionBuilder {
      * @param multiplicity true or false
      * @return this builder
      */
-    public SimpleOptionBuilder multiplicity(boolean multiplicity) {
+    public SimpleOptionBuilder repeatable(boolean multiplicity) {
         this.multiplicity = multiplicity;
         return this;
     }
@@ -95,10 +95,10 @@ public class SimpleOptionBuilder {
      */
     public IOption build() {
         Option option = new Option(shortName, longName);
-        option.setMultiple(multiplicity);
+        option.setRepeatable(multiplicity);
         option.setMandatory(mandatory);
         option.setDescription(description);
-        option.setArgument(argument);
+        option.setArgument((Argument)argument);
 
         return option;
     }

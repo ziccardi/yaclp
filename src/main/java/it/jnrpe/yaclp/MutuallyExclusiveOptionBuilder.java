@@ -16,6 +16,7 @@
 package it.jnrpe.yaclp;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -31,11 +32,11 @@ public class MutuallyExclusiveOptionBuilder {
 
     /**
      * Call this method many time to add all the options than can't be specified together.
-     * @param option the option
+     * @param options the options to be added
      * @return the builder
      */
-    public MutuallyExclusiveOptionBuilder withOption(final IOption option) {
-        this.options.add(option);
+    public MutuallyExclusiveOptionBuilder withOptions(final IOption... options) {
+        this.options.addAll(Arrays.asList(options));
         return this;
     }
 

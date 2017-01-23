@@ -15,20 +15,16 @@
  *******************************************************************************/
 package it.jnrpe.yaclp;
 
-import java.util.ArrayList;
 import java.util.List;
 
-class Option implements IOption {
-    private List<IOption> requiredOptions = new ArrayList<IOption>();
-    private Argument optionArgs = null;
+class Option extends AbstractOption {
 
     private final String shortName;
     private final String longName;
 
     private String description = "";
 
-    private boolean mandatory = false;
-    private boolean multiple = false;
+
 
     public Option(final String shortName, final String longName) {
         this.shortName = shortName;
@@ -39,19 +35,19 @@ class Option implements IOption {
         return args.contains(shortName) || args.contains(longName);
     }
 
-    public void consume(List<String> args, CommandLine res) throws ParsingException{
+    public final void consume(List<String> args, CommandLine res) throws ParsingException{
         if (!isPresent(args)) {
-            if (mandatory && !res.hasOption(getShortName())) {
+            if (isMandatory() && !res.hasOption(getShortName())) {
                 throw new ParsingException("Mandatory option [%s] is missing", getLongName());
             }
             return;
         }
 
-        if (res.hasOption(getShortName()) && !multiple) {
+        if (res.hasOption(getShortName()) && !isRepeatable()) {
             throw new ParsingException("Option [%s] can be specified only one time", getLongName());
         }
 
-        for (IOption requiredOption : requiredOptions) {
+        for (AbstractOption requiredOption : getRequiredOptions()) {
             if (requiredOption.isPresent(args)) {
                 requiredOption.consume(args, res);
             } else {
@@ -67,17 +63,13 @@ class Option implements IOption {
                 // consume and manage it
                 args.remove(i);
                 res.addValue(this, null);
-                if (optionArgs != null) {
-                    optionArgs.consume(this, args, i, res);
+                if (getArgument() != null) {
+                    getArgument().consume(this, args, i, res);
                 }
                 // consume again if repeated
                 consume(args, res);
             }
         }
-    }
-
-    public void addRequiredOption(IOption option) {
-        requiredOptions.add(option);
     }
 
     public String getShortName() {
@@ -86,22 +78,6 @@ class Option implements IOption {
 
     public String getLongName() {
         return longName;
-    }
-
-    public void setArgument(IArgument arg) {
-        this.optionArgs = (Argument) arg;
-    }
-
-    public boolean isMandatory() {
-        return mandatory;
-    }
-
-    public void setMandatory(boolean mandatory) {
-        this.mandatory = mandatory;
-    }
-
-    public void setMultiple(boolean multiple) {
-        this.multiple = multiple;
     }
 
     public void setDescription(String description) {
@@ -115,16 +91,16 @@ class Option implements IOption {
     @Override
     public String toString() {
         if (!longName.equals(shortName)) {
-            if (this.optionArgs == null) {
+            if (getArgument() == null) {
                 return String.format("%s (%s)", longName, shortName);
             } else {
-                return String.format("%s (%s) <%s>", longName, shortName, optionArgs.getName());
+                return String.format("%s (%s) <%s>", longName, shortName, getArgument().getName());
             }
         } else {
-            if (this.optionArgs == null) {
+            if (getArgument() == null) {
                 return String.format("%s", shortName);
             } else {
-                return String.format("%s <%s>", shortName, optionArgs.getName());
+                return String.format("%s <%s>", shortName, getArgument().getName());
             }
         }
     }

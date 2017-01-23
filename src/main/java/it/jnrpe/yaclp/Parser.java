@@ -25,12 +25,15 @@ import java.util.List;
 public class Parser {
     private List<IOption> options = new ArrayList<IOption>();
 
+    Parser() {
+    }
+
     /**
      * Ad an option to the list of supported options.
      * It can be a simple option ({@link Option}) or a mutually exclusive option ({@link MutuallyExclusiveOptions})
      * @param option the option to be added to the parser
      */
-    public void addOption(IOption option) {
+    void addOption(IOption option) {
         this.options.add(option);
     }
 
@@ -49,7 +52,7 @@ public class Parser {
 
         CommandLine res = new CommandLine();
         for (IOption opt: options) {
-            opt.consume(argsList, res);
+            ((AbstractOption)opt).consume(argsList, res);
         }
 
         if (!argsList.isEmpty()) {

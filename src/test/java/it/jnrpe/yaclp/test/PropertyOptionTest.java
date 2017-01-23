@@ -1,5 +1,6 @@
-package it.jnrpe.yaclp;
+package it.jnrpe.yaclp.test;
 
+import it.jnrpe.yaclp.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -12,11 +13,11 @@ public class PropertyOptionTest {
     }
 
     private Parser createParser(final String separator) {
-        IOption option = OptionBuilder.forPropertyOption("-D").description("Properties").withValueSeparator(separator).build();
-
-        Parser p = new Parser();
-        p.addOption(option);
-        return p;
+        return ParserBuilder
+            .forNewParser()
+            .withOption(
+                OptionBuilder.forPropertyOption("-D").description("Properties").withValueSeparator(separator).build()
+            ).build();
     }
 
     @Test

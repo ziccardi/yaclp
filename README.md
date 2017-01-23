@@ -35,89 +35,86 @@
  Let's configure a parser for that command line.
  
  ```java
-        IOption help = OptionBuilder.forOption("-h", "--help")
-            .description("Print this help")
-            .build();
+// We need to save the reference to the conf option to be able to pass it
+// as required option to the other options
+IOption conf = OptionBuilder.forOption("-c", "--conf")                          // (1)
+    .description("Specifies the JNRPE configuration file")
+    .argument(ArgumentBuilder.forArgument("path").mandatory(true).build())
+    .build();
 
-        IOption version = OptionBuilder.forOption("-v", "--version")
-            .description("Print the server version number")
-            .build();
-
-        IOption conf = OptionBuilder.forOption("-c", "--conf")
-            .description("Specifies the JNRPE configuration file")
-            .argument(ArgumentBuilder.forArgument("path").mandatory(true).build())  // (1)
-            .build();
-
-        // help, version and conf are mutually exclusive
-        IOption mutuallyExclusive1 = OptionBuilder.forMutuallyExclusiveOption()     // (2)
-            .withOption(help)
-            .withOption(version)
-            .withOption(conf)
-            .mandatory(true)                                                        // (3)
-            .build();
-        
-        IOption interactive = OptionBuilder.forOption("-i", "--interactive")
-            .requires(conf)                                                         // (4)
-            .description("Starts JNRPE in command line mode")
-            .build();
-        
-        IOption list = OptionBuilder.forOption("-l", "--list")
-            .requires(conf)
-            .description("Lists all the installed plugins")
-            .build();
-
-        IOption helpPlugin = OptionBuilder.forOption("-H", "--pluginHelp")
-            .requires(conf)
-            .description("Print help about a given plugin")
-            .build();
-
-        // interactive, list and helpPlugin are mutually exclusive
-        IOption mutuallyExclusive2 = OptionBuilder.forMutuallyExclusiveOption()
-            .withOption(interactive)
-            .withOption(list)
-            .withOption(helpPlugin)
-            .build();
+Parser p = ParserBuilder
+    .forNewParser()                                                             // (2)
+    .withOption(
+        OptionBuilder
+            .forMutuallyExclusiveOption() // help, version and conf are mutually exclusive
+            .withOptions(                                                       // (3)
+                OptionBuilder.forOption("-h", "--help")
+                    .description("Print this help")
+                    .build(),
+                OptionBuilder.forOption("-v", "--version")
+                    .description("Print the server version number")
+                    .build(),
+                conf
+            )
+            .mandatory(true)                                                    // (4)
+            .build()
+        ,
+        OptionBuilder
+            .forMutuallyExclusiveOption() // interactive, list and helpPlugin are mutually exclusive
+            .withOptions(
+                OptionBuilder.forOption("-i", "--interactive")
+                    .requires(conf)                                             // (5)
+                    .description("Starts JNRPE in command line mode")
+                    .build(),
+                OptionBuilder.forOption("-l", "--list")
+                    .requires(conf)
+                    .description("Lists all the installed plugins")
+                    .build(),
+                OptionBuilder.forOption("-H", "--pluginHelp")
+                    .requires(conf)
+                    .description("Print help about a given plugin")
+                    .build()
+            ).build()
+    ).build();
 ```
 
-(1) Create the `conf` option with an argument called `path`
+(1) Create the `conf` option with an argument called `path`. We need to save its reference so we will be able to 
+configure other options that depends on it
 
-(2) `help`, `version` and `conf` are mutually exclusive
+(2) Instantiate a parser builder and start passing all the options
 
-(3) Mutually exclusive option is mandatory: **one** of the enclosed options **must** be present.
+(3) `help`, `version` and `conf` are mutually exclusive. We can pass them all together as in the example or we can 
+inoke `withOptions` multiple times.
 
-(4) `interactive` requires the `conf` option
+(4) Mutually exclusive option is mandatory: **one** of the enclosed options **must** be present.
 
-That's all. Now that we have all the options, we can parse the command line:
+(5) `interactive`, `list` and `pluginConf` requires the `conf` option
+
+That's all. Now that we have a parser, we can process the command line:
 
 ```java
-    Parser p = new Parser();
-    p.addOption(mutuallyExclusive1);                            // (1)
-    p.addOption(mutuallyExclusive2);                        
-
     try{
-        CommandLine cl = p.parse(args);                         // (2)
+        CommandLine cl = p.parse(args);                         // (1)
     } catch (ParsingException pe) {
-        System.out.println("Error - " + pe.getMessage());       // (3)
+        System.out.println("Error - " + pe.getMessage());       // (2)
 
-        HelpFormatter hf = new HelpFormatter("exanmple", p);    // (4)
-        hf.printUsage(System.out);                              // (5)
-        hf.printHelp(System.out);                               // (6)
+        HelpFormatter hf = new HelpFormatter("exanmple", p);    // (3)
+        hf.printUsage(System.out);                              // (4)
+        hf.printHelp(System.out);                               // (5)
     }
 ```
 
- (1) Pass the configured options to the parser. We don't need to pass the enclosed ones.
+ (1) Parse the command line: a `CommandLine` object is returned if parsing succeeds.
 
- (2) Parse the command line: a `CommandLine` object is returned if parsing succeeds.
+ (2) If an error occurs, the received exception will contain a meaningful message,
 
- (3) If an error occurs, the received exception will contain a meaningful message,
-
- (4) YACLP provides an `HelpFormatter` object to help the user to create a meaningful help message.
+ (3) YACLP provides an `HelpFormatter` object to help the user to create a meaningful help message.
  
- (5) `HelpFormatter` provides a mean to print the usage of the tool. In this case it will print:
+ (4) `HelpFormatter` provides a mean to print the usage of the tool. In this case it will print:
  
  `example [--help (-h) | --version (-v) | --conf (-c) <path>] [--interactive (-i) | --list (-l) | --pluginHelp (-H)]`
  
- (6) The `printHelp` method will output a nice and helpful message. In this case:
+ (5) The `printHelp` method will output a nice and helpful message. In this case:
  
  ```
     --help (-h)           Print this help 
@@ -139,51 +136,49 @@ import it.jnrpe.yaclp.*;
 
 public class YaclpExample {
     public static void main(String[] args) {
-        IOption help = OptionBuilder.forOption("-h", "--help")
-            .description("Print this help")
-            .build();
 
-        IOption version = OptionBuilder.forOption("-v", "--version")
-            .description("Print the server version number")
-            .build();
-
+        // We need to save the reference to the conf option to be able to pass it
+        // as required option to the other options
         IOption conf = OptionBuilder.forOption("-c", "--conf")
             .description("Specifies the JNRPE configuration file")
             .argument(ArgumentBuilder.forArgument("path").mandatory(true).build())
             .build();
 
-        // help, version and conf are mutually exclusive
-        IOption mutuallyExclusive1 = OptionBuilder.forMutuallyExclusiveOption()
-            .withOption(help)
-            .withOption(version)
-            .withOption(conf)
-            .mandatory(true)
-            .build();
+        Parser p = ParserBuilder
+            .forNewParser()
+            .withOption(
+                OptionBuilder
+                    .forMutuallyExclusiveOption() // help, version and conf are mutually exclusive
+                    .withOptions(
+                        OptionBuilder.forOption("-h", "--help")
+                            .description("Print this help")
+                            .build(),
+                        OptionBuilder.forOption("-v", "--version")
+                            .description("Print the server version number")
+                            .build(),
+                        conf
+                    )
+                    .mandatory(true)
+                    .build()
+                ,
+                OptionBuilder
+                    .forMutuallyExclusiveOption() // interactive, list and helpPlugin are mutually exclusive
+                    .withOptions(
+                        OptionBuilder.forOption("-i", "--interactive")
+                            .requires(conf)
+                            .description("Starts JNRPE in command line mode")
+                            .build(),
+                        OptionBuilder.forOption("-l", "--list")
+                            .requires(conf)
+                            .description("Lists all the installed plugins")
+                            .build(),
+                        OptionBuilder.forOption("-H", "--pluginHelp")
+                            .requires(conf)
+                            .description("Print help about a given plugin")
+                            .build()
+                    ).build()
+            ).build();
 
-        IOption interactive = OptionBuilder.forOption("-i", "--interactive")
-            .requires(conf)
-            .description("Starts JNRPE in command line mode")
-            .build();
-
-        IOption list = OptionBuilder.forOption("-l", "--list")
-            .requires(conf)
-            .description("Lists all the installed plugins")
-            .build();
-
-        IOption helpPlugin = OptionBuilder.forOption("-H", "--pluginHelp")
-            .requires(conf)
-            .description("Print help about a given plugin")
-            .build();
-
-        IOption mutuallyExclusive2 = OptionBuilder.forMutuallyExclusiveOption()
-            .withOption(interactive)
-            .withOption(list)
-            .withOption(helpPlugin)
-            .build();
-
-        Parser p = new Parser();
-        p.addOption(mutuallyExclusive1);
-        p.addOption(mutuallyExclusive2);
 
         try{
             p.parse(args);

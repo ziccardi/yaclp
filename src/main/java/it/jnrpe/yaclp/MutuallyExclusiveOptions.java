@@ -17,20 +17,15 @@ package it.jnrpe.yaclp;
 
 import org.apache.commons.lang.StringUtils;
 
+import java.util.Arrays;
 import java.util.List;
 
-class MutuallyExclusiveOptions implements IOption {
+class MutuallyExclusiveOptions extends AbstractOption {
 
-    private IOption[] options;
+    private AbstractOption[] options;
 
-    private boolean mandatory = false;
-
-    public MutuallyExclusiveOptions (IOption... options) {
-        this.options = options;
-    }
-
-    public void addRequiredOption(IOption option) {
-
+    MutuallyExclusiveOptions (IOption... options) {
+        this.options = Arrays.copyOf(options, options.length, AbstractOption[].class);
     }
 
     private String getOptionNames(String separator) {
@@ -44,9 +39,9 @@ class MutuallyExclusiveOptions implements IOption {
 
     public void consume(List<String> args, CommandLine res) throws ParsingException{
         // Only one must be present...
-        IOption passedInOption = null;
+        AbstractOption passedInOption = null;
 
-        for (IOption opt : options) {
+        for (AbstractOption opt : options) {
             if (opt.isPresent(args)) {
                 if (passedInOption != null) {
                     throw new ParsingException("Incompatible options present: only one of [%s] must be specified", getOptionNames(","));
@@ -60,7 +55,7 @@ class MutuallyExclusiveOptions implements IOption {
         if (passedInOption != null) {
             passedInOption.consume(args, res);
         } else {
-            if (mandatory) {
+            if (isMandatory()) {
                 throw new ParsingException("Mandatory option missing: one of [%s] must be passed", getOptionNames(","));
             }
         }
@@ -74,14 +69,6 @@ class MutuallyExclusiveOptions implements IOption {
         }
 
         return present;
-    }
-
-    public boolean isMandatory() {
-        return mandatory;
-    }
-
-    public void setMandatory(boolean mandatory) {
-        this.mandatory = mandatory;
     }
 
     @Override
@@ -113,7 +100,4 @@ class MutuallyExclusiveOptions implements IOption {
     public String getLongName() {
         return null;
     }
-
-    public void setArgument(IArgument arg) {}
-
 }

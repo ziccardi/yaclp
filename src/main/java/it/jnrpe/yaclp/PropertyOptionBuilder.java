@@ -34,7 +34,7 @@ public class PropertyOptionBuilder {
     PropertyOptionBuilder(final String shortName) {
         // We want only short name for property options
         this.simpleOptionBuilder = new SimpleOptionBuilder(shortName, shortName)
-            .multiplicity(true);
+            .repeatable(true);
     }
 
     /**
