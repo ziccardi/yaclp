@@ -84,7 +84,7 @@ configure other options that depends on it
 cli (YACLP supports command based cli as well)
 
 (3) `help`, `version` and `conf` are mutually exclusive. We can pass them all together as in the example or we can 
-inoke `withOptions` multiple times.
+invoke `withOptions` multiple times.
 
 (4) Mutually exclusive option is mandatory: **one** of the enclosed options **must** be present.
 
