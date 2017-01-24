@@ -62,7 +62,7 @@ class MutuallyExclusiveOptions extends AbstractOption {
     public boolean isPresent(List<String> args) {
         boolean present = false;
 
-        for (IOption opt : options) {
+        for (AbstractOption opt : options) {
             present |= opt.isPresent(args);
         }
 

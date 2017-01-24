@@ -16,6 +16,7 @@
 package it.jnrpe.yaclp;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,7 +24,8 @@ import java.util.List;
  * Parse a command line.
  */
 public class Parser {
-    private List<IOption> options = new ArrayList<IOption>();
+    private List<IOption> options = new ArrayList<>();
+    private final List<Command> commands = new ArrayList<>();
 
     Parser() {
     }
@@ -37,8 +39,17 @@ public class Parser {
         this.options.add(option);
     }
 
+    void addCommand(Command command) {
+        this.commands.add(command);
+    }
+
+
     List<IOption> getOptions() {
-        return options;
+        return Collections.unmodifiableList(options);
+    }
+
+    List<Command> getCommands() {
+        return Collections.unmodifiableList(commands);
     }
 
     /**
@@ -48,18 +59,41 @@ public class Parser {
      * @throws ParsingException if the command line is not valid according to the parser configuration
      */
     public CommandLine parse(String[] args) throws ParsingException{
+        CommandLine res = new CommandLine();
+        return parse(args, res);
+    }
+
+    CommandLine parse(String[] args, CommandLine cl) throws ParsingException{
         List<String> argsList = preparse(args);
 
-        CommandLine res = new CommandLine();
+        if (commands != null && !commands.isEmpty()) {
+            boolean commandFound = false;
+
+            for (Command command : commands) {
+                if (command.isPresent(argsList)) {
+                    commandFound = true;
+                    command.consume(argsList, cl);
+                }
+            }
+
+            if (!commandFound) {
+                // FIXME: improve error message
+                List<String> commandNames = new ArrayList<>(commands.size());
+                commands.forEach(command -> commandNames.add(command.getLongName()));
+
+                throw new ParsingException("At least one of [%s] must be specified", String.join(",", commandNames));
+            }
+        }
+
         for (IOption opt: options) {
-            ((AbstractOption)opt).consume(argsList, res);
+            ((AbstractOption)opt).consume(argsList, cl);
         }
 
         if (!argsList.isEmpty()) {
             throw new ParsingException("Unexpected tokens: " + argsList);
         }
 
-        return res;
+        return cl;
     }
 
     /**
@@ -69,7 +103,7 @@ public class Parser {
      * @return a List contained the command line (options and arguments)
      */
     private List<String> preparse(String[] args) {
-        List<String> res = new LinkedList<String>();
+        List<String> res = new LinkedList<>();
 
         for (String arg: args) {
 

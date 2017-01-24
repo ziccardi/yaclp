@@ -22,13 +22,6 @@ import java.util.List;
  */
 public interface IOption {
     /**
-     * Checks if the option is present in the given command line.
-     * @param args the command line
-     * @return true or false
-     */
-    boolean isPresent(List<String> args);
-
-    /**
      * Returns the short name for this option.
      * @return the short name for this option
      */
@@ -45,8 +38,6 @@ public interface IOption {
      * @return  true or false
      */
     boolean isMandatory();
-
-    void setDescription(String description);
 
     String getDescription();
 }

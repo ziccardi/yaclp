@@ -43,7 +43,7 @@ IOption conf = OptionBuilder.forOption("-c", "--conf")                          
     .build();
 
 Parser p = ParserBuilder
-    .forNewParser()                                                             // (2)
+    .forOptionsBasedCli()                                                             // (2)
     .withOption(
         OptionBuilder
             .forMutuallyExclusiveOption() // help, version and conf are mutually exclusive
@@ -57,8 +57,7 @@ Parser p = ParserBuilder
                 conf
             )
             .mandatory(true)                                                    // (4)
-            .build()
-        ,
+            .build(),
         OptionBuilder
             .forMutuallyExclusiveOption() // interactive, list and helpPlugin are mutually exclusive
             .withOptions(
@@ -145,7 +144,7 @@ public class YaclpExample {
             .build();
 
         Parser p = ParserBuilder
-            .forNewParser()
+            .forOptionsBasedCli()
             .withOption(
                 OptionBuilder
                     .forMutuallyExclusiveOption() // help, version and conf are mutually exclusive
@@ -159,8 +158,7 @@ public class YaclpExample {
                         conf
                     )
                     .mandatory(true)
-                    .build()
-                ,
+                    .build(),
                 OptionBuilder
                     .forMutuallyExclusiveOption() // interactive, list and helpPlugin are mutually exclusive
                     .withOptions(

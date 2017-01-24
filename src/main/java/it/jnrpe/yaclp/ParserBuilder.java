@@ -23,40 +23,68 @@ import java.util.List;
  * Builder for command line parser
  */
 public class ParserBuilder {
-    private List<IOption> options = new ArrayList<IOption>();
-
     private ParserBuilder() {
     }
 
-    /**
-     * Creates a new builder
-     * @return the new builder
-     */
-    public static ParserBuilder forNewParser() {
-        return new ParserBuilder();
+    public static OptionsBasedParserBuilder forOptionsBasedCli() {
+        return new OptionsBasedParserBuilder();
     }
 
-    /**
-     * Adds options to the parser configuration
-     * @param options the options to be added
-     * @return this builder
-     */
-    public ParserBuilder withOption(final IOption... options) {
-        if (options.length == 1) {
-            this.options.add(options[0]);
-        } else {
-            this.options.addAll(Arrays.asList(options));
+    public static CommandBasedParserBuilder forCommandsBasedCli() {
+        return new CommandBasedParserBuilder();
+    }
+
+    public static class CommandBasedParserBuilder {
+
+        private List<Command> commands = new ArrayList<>();
+
+        private CommandBasedParserBuilder() {
         }
-        return this;
+
+        private void addCommands(final Command... commands) {
+            if (commands.length == 1) {
+                this.commands.add(commands[0]);
+            } else {
+                this.commands.addAll(Arrays.asList(commands));
+            }
+        }
+
+        public CommandBasedParserBuilder withCommands(final Command... commands) {
+            addCommands(commands);
+            return this;
+        }
+
+        public Parser build() {
+            Parser p = new Parser();
+            commands.forEach(p::addCommand);
+            return p;
+        }
     }
 
-    /**
-     * Builds a new Parser instance
-     * @return the newly build parser instance
-     */
-    public Parser build() {
-        Parser p = new Parser();
-        options.forEach(p::addOption);
-        return p;
+    public static class OptionsBasedParserBuilder {
+
+        private List<IOption> options = new ArrayList<>();
+
+        private OptionsBasedParserBuilder() {
+        }
+
+        private void addOptions(IOption... options) {
+            if (options.length == 1) {
+                this.options.add(options[0]);
+            } else {
+                this.options.addAll(Arrays.asList(options));
+            }
+        }
+
+        public OptionsBasedParserBuilder withOption(final IOption... options) {
+            addOptions(options);
+            return this;
+        }
+
+        public Parser build() {
+            Parser p = new Parser();
+            options.forEach(p::addOption);
+            return p;
+        }
     }
 }
