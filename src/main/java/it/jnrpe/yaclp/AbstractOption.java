@@ -54,4 +54,6 @@ abstract class AbstractOption implements IOption {
     public boolean isMandatory() {
         return mandatory;
     }
+
+    public abstract boolean isPresent(List<String> args);
 }

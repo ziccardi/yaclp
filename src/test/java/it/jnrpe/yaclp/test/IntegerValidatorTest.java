@@ -9,7 +9,7 @@ public class IntegerValidatorTest {
     @Test
     public void testValidValue() throws Exception {
         ParserBuilder
-            .forNewParser()
+            .forOptionsBasedCli()
             .withOption(
                 OptionBuilder.forOption("-i", "--integer")
                 .repeatable(true)
@@ -27,7 +27,7 @@ public class IntegerValidatorTest {
     @Test(expected = ParsingException.class)
     public void testInvalidValue() throws Exception {
         ParserBuilder
-            .forNewParser()
+            .forOptionsBasedCli()
             .withOption(
                 OptionBuilder.forOption("-i", "--integer")
                 .repeatable(true)
@@ -45,7 +45,7 @@ public class IntegerValidatorTest {
     @Test(expected = ParsingException.class)
     public void testValueTooSmall() throws Exception {
         ParserBuilder
-            .forNewParser()
+            .forOptionsBasedCli()
             .withOption(
                 OptionBuilder.forOption("-i", "--integer")
                     .repeatable(true)
@@ -65,7 +65,7 @@ public class IntegerValidatorTest {
     @Test(expected = ParsingException.class)
     public void testValueTooBig() throws Exception {
         ParserBuilder
-            .forNewParser()
+            .forOptionsBasedCli()
             .withOption(
                 OptionBuilder.forOption("-i", "--integer")
                     .repeatable(true)

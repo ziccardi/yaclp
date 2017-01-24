@@ -8,7 +8,7 @@ public class MandatoryOptionTest {
     @Test(expected = ParsingException.class)
     public void testMissingMandatoryBeginning() throws Exception {
         ParserBuilder
-            .forNewParser()
+            .forOptionsBasedCli()
             .withOption(
                 OptionBuilder.forOption("-m", "--mandatory").mandatory(true).build(),
                 OptionBuilder.forOption("-o", "--optional").build()
@@ -20,7 +20,7 @@ public class MandatoryOptionTest {
     @Test(expected = ParsingException.class)
     public void testMissingMandatoryEnding() throws Exception {
         ParserBuilder
-            .forNewParser()
+            .forOptionsBasedCli()
             .withOption(
                 OptionBuilder.forOption("-o", "--optional").build(),
                 OptionBuilder.forOption("-m", "--mandatory").mandatory(true).build()

@@ -14,7 +14,7 @@ public class PropertyOptionTest {
 
     private Parser createParser(final String separator) {
         return ParserBuilder
-            .forNewParser()
+            .forOptionsBasedCli()
             .withOption(
                 OptionBuilder.forPropertyOption("-D").description("Properties").withValueSeparator(separator).build()
             ).build();

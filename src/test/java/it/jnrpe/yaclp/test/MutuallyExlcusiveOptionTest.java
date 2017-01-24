@@ -9,7 +9,7 @@ import java.util.LinkedList;
 public class MutuallyExlcusiveOptionTest {
 
     private Parser buildMutuallyExclusiveOption() {
-        return ParserBuilder.forNewParser().withOption(
+        return ParserBuilder.forOptionsBasedCli().withOption(
             OptionBuilder.forMutuallyExclusiveOption()
             .withOptions(
                 OptionBuilder.forOption("-e", "--exists")

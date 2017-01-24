@@ -28,6 +28,8 @@ public class CommandLine {
 
     private Map<String, Properties> propertyParams = new HashMap<String, Properties>();
 
+    private String command;
+
     /**
      * Adds a new value for the given option
      * @param params map containing the param/value pairs
@@ -64,6 +66,10 @@ public class CommandLine {
         }
 
         props.setProperty(key, value);
+    }
+
+    void setCommand(final String command) {
+        this.command = command;
     }
 
     /**
@@ -105,5 +111,9 @@ public class CommandLine {
      */
     public boolean hasOption(String name) {
         return parmAndValue.containsKey(name);
+    }
+
+    public boolean hasCommand(final String command) {
+        return (this.command != null && this.command.equals(command));
     }
 }

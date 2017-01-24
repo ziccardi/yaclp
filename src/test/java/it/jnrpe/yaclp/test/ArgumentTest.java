@@ -7,7 +7,7 @@ public class ArgumentTest {
 
     @Test(expected = ParsingException.class)
     public void testMissingMandatoryArg() throws Exception {
-        Parser parser = ParserBuilder.forNewParser()
+        Parser parser = ParserBuilder.forOptionsBasedCli()
             .withOption(
                 OptionBuilder.forOption("-m", "--mandatory")
                 .mandatory(true)
@@ -21,7 +21,7 @@ public class ArgumentTest {
 
     @Test
     public void testMissingOptionalArg() throws Exception {
-        Parser parser = ParserBuilder.forNewParser()
+        Parser parser = ParserBuilder.forOptionsBasedCli()
         .withOption(
             OptionBuilder.forOption("-m", "--mandatory")
                 .mandatory(true)

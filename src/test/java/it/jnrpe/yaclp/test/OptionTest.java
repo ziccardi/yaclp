@@ -9,7 +9,7 @@ public class OptionTest {
     @Test
     public void testOptionalOption() throws Exception {
         ParserBuilder
-            .forNewParser()
+            .forOptionsBasedCli()
             .withOption(
                 OptionBuilder.forOption("-o", "--optional").build()
             )
@@ -20,7 +20,7 @@ public class OptionTest {
     @Test(expected = ParsingException.class)
     public void testMandatoryOption() throws Exception {
         ParserBuilder
-            .forNewParser()
+            .forOptionsBasedCli()
             .withOption(
                 OptionBuilder.forOption("-o", "--optional").mandatory(true).build()
             )
@@ -32,7 +32,7 @@ public class OptionTest {
     public void testSingleOption() throws Exception {
         CommandLine cl =
             ParserBuilder
-            .forNewParser()
+            .forOptionsBasedCli()
             .withOption(
                 OptionBuilder
                     .forOption("-m", "--mandatory")
@@ -55,7 +55,7 @@ public class OptionTest {
     @Test(expected = ParsingException.class)
     public void testUnrepetibleOption() throws Exception {
         ParserBuilder
-            .forNewParser()
+            .forOptionsBasedCli()
             .withOption(
                 OptionBuilder
                     .forOption("-m", "--mandatory")
@@ -70,7 +70,7 @@ public class OptionTest {
     @Test
     public void testRepetibleOption() throws Exception {
         CommandLine cl = ParserBuilder
-            .forNewParser()
+            .forOptionsBasedCli()
             .withOption(
                 OptionBuilder
                     .forOption("-m", "--mandatory")
