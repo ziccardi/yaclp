@@ -43,7 +43,7 @@ IOption conf = OptionBuilder.forOption("-c", "--conf")                          
     .build();
 
 Parser p = ParserBuilder
-    .forOptionsBasedCli()                                                             // (2)
+    .forOptionsBasedCli()                                                       // (2)
     .withOption(
         OptionBuilder
             .forMutuallyExclusiveOption() // help, version and conf are mutually exclusive
@@ -80,7 +80,8 @@ Parser p = ParserBuilder
 (1) Create the `conf` option with an argument called `path`. We need to save its reference so we will be able to 
 configure other options that depends on it
 
-(2) Instantiate a parser builder and start passing all the options
+(2) Instantiate a parser builder and start passing all the options. We are going to create a parser for option based
+cli (YACLP supports command based cli as well)
 
 (3) `help`, `version` and `conf` are mutually exclusive. We can pass them all together as in the example or we can 
 inoke `withOptions` multiple times.
