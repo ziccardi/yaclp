@@ -29,8 +29,9 @@
 
     <scm>
         <connection>scm:git:git://github.com/ziccardi/yaclp.git</connection>
-        <developerConnection>scm:git:ssh://github.com:ziccardi/yaclp.git</developerConnection>
-        <url>https://github.com/ziccardi/yaclp/tree/master</url>
+        <developerConnection>scm:git:git@github.com:ziccardi/yaclp.git</developerConnection>
+        <url>https://github.com/ziccardi/yaclp</url>
+        <tag>HEAD</tag>
     </scm>
 
     <properties>
@@ -159,6 +160,21 @@
             </plugin>
         </plugins>
     </build>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.apache.maven.scm</groupId>
+                <artifactId>maven-scm-api</artifactId>
+                <version>1.9.4</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven.scm</groupId>
+                <artifactId>maven-scm-provider-gitexe</artifactId>
+                <version>1.9.4</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <distributionManagement>
         <snapshotRepository>
