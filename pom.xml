@@ -4,7 +4,7 @@
 
     <groupId>it.jnrpe.yaclp</groupId>
     <artifactId>cli-parser</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>YACLP</name>
@@ -29,7 +29,7 @@
         <connection>scm:git:git://github.com/ziccardi/yaclp.git</connection>
         <developerConnection>scm:git:git@github.com:ziccardi/yaclp.git</developerConnection>
         <url>https://github.com/ziccardi/yaclp</url>
-        <tag>cli-parser-1.0.2</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <properties>
