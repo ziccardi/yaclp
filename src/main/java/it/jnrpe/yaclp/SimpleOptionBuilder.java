@@ -25,7 +25,7 @@ public class SimpleOptionBuilder {
     private final String shortName;
     private final String longName;
 
-    private final List<IOption> requiredOptions = new ArrayList<IOption>();
+    private final List<AbstractOption> requiredOptions = new ArrayList<>();
 
     private boolean multiplicity = false;
     private boolean mandatory = false;
@@ -74,7 +74,7 @@ public class SimpleOptionBuilder {
      * @return this builder
      */
     public SimpleOptionBuilder requires(IOption opt) {
-        this.requiredOptions.add(opt);
+        this.requiredOptions.add((AbstractOption) opt);
         return this;
     }
 
@@ -100,6 +100,7 @@ public class SimpleOptionBuilder {
         option.setDescription(description);
         option.setArgument((Argument)argument);
 
+        requiredOptions.forEach(option::addRequiredOption);
         return option;
     }
 }

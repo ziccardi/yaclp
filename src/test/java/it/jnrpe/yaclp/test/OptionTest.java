@@ -96,4 +96,38 @@ public class OptionTest {
 
         Assert.assertTrue(cl.getValues("-m").length == 2);
     }
+
+    @Test(expected = ParsingException.class)
+    public void testOptionDependency() throws Exception {
+        IOption primary = OptionBuilder
+            .forOption("-p", "--primary")
+            .argument(ArgumentBuilder.forArgument("myarg").build()).build();
+
+        Parser p = ParserBuilder
+            .forOptionsBasedCli()
+            .withOption(
+                primary,
+                OptionBuilder
+                    .forOption("-s", "--secondary")
+                    .requires(primary)
+                .build()
+            )
+            .build();
+        try {
+            p.parse(new String[]{"-p", "primaryarg"});
+        } catch (Exception e) {
+            Assert.fail("Primary option can be passed alone");
+        }
+
+        try {
+            p.parse(new String[]{"-p", "primaryarg", "-s"});
+        } catch (Exception e) {
+            Assert.fail("Both primary and secondary is correct");
+        }
+
+        p.parse(new String[]{"-s"});
+        Assert.fail("-s depends on -p. This should fail");
+
+
+    }
 }
