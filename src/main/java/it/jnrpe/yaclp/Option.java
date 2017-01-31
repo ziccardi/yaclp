@@ -35,29 +35,7 @@ class Option extends AbstractOption {
         return args.contains(shortName) || args.contains(longName);
     }
 
-    public final void consume(List<String> args, CommandLine res) throws ParsingException{
-        if (!isPresent(args)) {
-            if (isMandatory() && !res.hasOption(getShortName())) {
-                throw new ParsingException("Mandatory option [%s] is missing", getLongName());
-            }
-            return;
-        }
-
-        if (res.hasOption(getShortName()) && !isRepeatable()) {
-            throw new ParsingException("Option [%s] can be specified only one time", getLongName());
-        }
-
-        for (AbstractOption requiredOption : getRequiredOptions()) {
-            if (requiredOption.isPresent(args)) {
-                requiredOption.consume(args, res);
-            } else {
-                if (res.hasOption(requiredOption.getShortName())) {
-                    continue;
-                }
-                throw new ParsingException("%s requires [%s]", longName, requiredOption.getLongName());
-            }
-        }
-
+    protected final void doConsume(List<String> args, CommandLine res) throws ParsingException{
         for (int i = 0; i < args.size(); i++) {
             if (args.get(i).equals(shortName) || args.get(i).equals(longName)) {
                 // consume and manage it

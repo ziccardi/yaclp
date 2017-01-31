@@ -26,6 +26,7 @@ public class SimpleOptionBuilder {
     private final String longName;
 
     private final List<AbstractOption> requiredOptions = new ArrayList<>();
+    private final List<AbstractOption> incompatibleOptions = new ArrayList<>();
 
     private boolean multiplicity = false;
     private boolean mandatory = false;
@@ -70,11 +71,22 @@ public class SimpleOptionBuilder {
 
     /**
      * Call this method many time, passing all the options required by this option
-     * @param opt the option required by this option
+     * @param opts the options required by this option
      * @return this builder
      */
-    public SimpleOptionBuilder requires(IOption opt) {
-        this.requiredOptions.add((AbstractOption) opt);
+    public SimpleOptionBuilder requires(IOption... opts) {
+        for (IOption opt : opts) {
+            this.requiredOptions.add((AbstractOption) opt);
+        }
+
+        return this;
+    }
+
+    public SimpleOptionBuilder incompatibleWith(IOption... opts) {
+        for (IOption opt : opts) {
+            this.incompatibleOptions.add((AbstractOption) opt);
+        }
+
         return this;
     }
 
@@ -101,6 +113,7 @@ public class SimpleOptionBuilder {
         option.setArgument((Argument)argument);
 
         requiredOptions.forEach(option::addRequiredOption);
+        incompatibleOptions.forEach(option::addIncompatibleOption);
         return option;
     }
 }

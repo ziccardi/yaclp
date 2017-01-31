@@ -35,7 +35,7 @@ class MutuallyExclusiveOptions extends AbstractOption {
         return String.join(separator, params);
     }
 
-    public void consume(List<String> args, CommandLine res) throws ParsingException{
+    protected void doConsume(List<String> args, CommandLine res) throws ParsingException{
         // Only one must be present...
         AbstractOption passedInOption = null;
 
