@@ -15,8 +15,6 @@
  *******************************************************************************/
 package it.jnrpe.yaclp;
 
-import java.util.List;
-
 /**
  * Generic option interface.
  */
@@ -40,4 +38,8 @@ public interface IOption {
     boolean isMandatory();
 
     String getDescription();
+
+    void addRequiredOption(IOption option);
+
+    void addIncompatibleOption(IOption option);
 }

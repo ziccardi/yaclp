@@ -127,7 +127,7 @@ public class OptionTest {
 
         p.parse(new String[]{"-s"});
         Assert.fail("-s depends on -p. This should fail");
-
-
     }
+
+
 }
