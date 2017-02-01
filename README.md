@@ -2,7 +2,19 @@
 
  YACLP, as the name implies, is a set of classes that implements a command line parser.
  It was born as a subproject of JNRPE to solve the need to be able to easily configure command line option inter-dependencies.
- 
+
+## Where can I get the latest release?
+
+The easiest wat is to pull it from the central maven repositories:
+
+```xml
+<dependency>
+    <groupId>it.jnrpe.yaclp</groupId>
+    <artifactId>cli-parser</artifactId>
+    <version>1.0.2</version>
+</dependency>
+```
+
 ## Using YACLP
 
  To use YACLP you will have to deal mainly with 4 classes:
