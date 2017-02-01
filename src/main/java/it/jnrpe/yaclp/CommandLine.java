@@ -77,10 +77,14 @@ public class CommandLine {
      * @param param the option name
      * @return the first value
      */
-    public String getValue(String param) {
+    public String getValue(final String param) {
+        return getValue(param, null);
+    }
+
+    public String getValue(final String param, final String defaultValue) {
         List<String> values = parmAndValue.get(param);
         if (values == null) {
-            return null;
+            return defaultValue;
         }
 
         return values.get(0);
@@ -92,14 +96,18 @@ public class CommandLine {
      * @return the value
      */
     public String[] getValues(final String param) {
+        return getValues(param, null);
+    }
+
+
+    public String[] getValues(final String param, String... defaultValues) {
         List<String> values = parmAndValue.get(param);
         if (values == null) {
-            return null;
+            return defaultValues;
         }
 
         return values.toArray(new String[values.size()]);
     }
-
     public Properties getProperties(String optionName) {
         return propertyParams.get(optionName);
     }
