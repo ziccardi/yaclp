@@ -31,5 +31,5 @@ public interface IArgumentValidator {
    * @throws ParsingException if the value can't be validated
    */
   void validate(final IOption option, final IArgument argument, final String value)
-      throws ParsingException;
+      throws ValidationException;
 }

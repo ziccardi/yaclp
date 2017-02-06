@@ -17,7 +17,6 @@ package it.jnrpe.yaclp.validators;
 
 import it.jnrpe.yaclp.IArgument;
 import it.jnrpe.yaclp.IOption;
-import it.jnrpe.yaclp.ParsingException;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -60,9 +59,9 @@ public class EnumValidator implements IArgumentValidator {
   public void validate(
       final IOption option,
       final IArgument argument,
-      final String value) throws ParsingException {
+      final String value) throws ValidationException {
       if (!acceptedValues.contains(caseSensitive ? value : value.toLowerCase())) {
-        throw new ParsingException(
+        throw new ValidationException(
             "Value for argument <%s> of option <%s> must be one of [%s]",
             argument.getName(),
             option.getLongName(),

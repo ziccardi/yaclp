@@ -18,7 +18,6 @@ package it.jnrpe.yaclp.validators;
 
 import it.jnrpe.yaclp.IArgument;
 import it.jnrpe.yaclp.IOption;
-import it.jnrpe.yaclp.ParsingException;
 
 import java.io.File;
 
@@ -90,37 +89,32 @@ public class FileValidator implements IArgumentValidator {
     return (this.enabledChecks & flag) != 0;
   }
 
-  /**
-   * Validates the argument value according to the enabled flags.
-   *
-   * @param value the argument value
-   * @throws ParsingException if the value is not validated
-   */
+  @Override
   public void validate(final IOption option, final IArgument argument, final String value)
-      throws ParsingException {
+      throws ValidationException {
     File pathToCheck = new File(value);
     if (mustCheck(MUST_BE_FILE) && !pathToCheck.isFile()) {
-      throw new ParsingException("Specified path (<%s>) is not a file", value);
+      throw new ValidationException("Specified path (<%s>) is not a file", value);
     }
 
     if (mustCheck(MUST_BE_DIRECTORY) && !pathToCheck.isDirectory()) {
-      throw new ParsingException("Specified path (<%s>) is not a directory", value);
+      throw new ValidationException("Specified path (<%s>) is not a directory", value);
     }
 
     if (mustCheck(MUST_EXISTS) && !pathToCheck.exists()) {
-      throw new ParsingException("Specified file (<%s>) does not exists", value);
+      throw new ValidationException("Specified file (<%s>) does not exists", value);
     }
 
     if (mustCheck(MUST_NOT_EXISTS) && pathToCheck.exists()) {
-      throw new ParsingException("Specified file (<%s>) exists: it shouldn't", value);
+      throw new ValidationException("Specified file (<%s>) exists: it shouldn't", value);
     }
 
     if (mustCheck(MUST_BE_WRITABLE) && !pathToCheck.canWrite()) {
-      throw new ParsingException("Specified file (<%s>) can't be written", value);
+      throw new ValidationException("Specified file (<%s>) can't be written", value);
     }
 
     if (mustCheck(MUST_BE_READABLE) && !pathToCheck.canRead()) {
-      throw new ParsingException("Specified file (<%s>) can't be read", value);
+      throw new ValidationException("Specified file (<%s>) can't be read", value);
     }
   }
 
