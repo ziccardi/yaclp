@@ -16,6 +16,8 @@
 
 package it.jnrpe.yaclp.validators;
 
+import it.jnrpe.yaclp.IArgument;
+import it.jnrpe.yaclp.IOption;
 import it.jnrpe.yaclp.ParsingException;
 
 /**
@@ -62,7 +64,8 @@ public class IntegerValidator implements IArgumentValidator {
    * @param value the argument value
    * @throws ParsingException if validation fails
    */
-  public void validate(final String value) throws ParsingException {
+  public void validate(final IOption option, final IArgument argument, final String value) throws
+      ParsingException {
     try {
       Integer val = Integer.parseInt(value, radix);
 

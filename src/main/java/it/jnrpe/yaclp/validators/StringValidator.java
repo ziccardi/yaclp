@@ -16,6 +16,8 @@
 
 package it.jnrpe.yaclp.validators;
 
+import it.jnrpe.yaclp.IArgument;
+import it.jnrpe.yaclp.IOption;
 import it.jnrpe.yaclp.ParsingException;
 
 import java.util.regex.Matcher;
@@ -48,7 +50,7 @@ public class StringValidator implements IArgumentValidator {
    * @param maxLen maximum string length or null.
    * @param regexp regexp to be used to validate the argument or null.
    */
-  private StringValidator(Integer minLen, Integer maxLen, String regexp) {
+  private StringValidator(final Integer minLen, final Integer maxLen, final String regexp) {
     this.minLen = minLen;
     this.maxLen = maxLen;
 
@@ -65,7 +67,10 @@ public class StringValidator implements IArgumentValidator {
    * @param value the argument value
    * @throws ParsingException on error validating the string
    */
-  public void validate(String value) throws ParsingException {
+  public void validate(
+      final IOption option,
+      final IArgument argument,
+      final String value) throws ParsingException {
     if (minLen != null && value.length() < minLen) {
       throw new ParsingException("Value is too short (minimum length: %d)", minLen);
     }

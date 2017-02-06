@@ -16,6 +16,8 @@
 
 package it.jnrpe.yaclp.validators;
 
+import it.jnrpe.yaclp.IArgument;
+import it.jnrpe.yaclp.IOption;
 import it.jnrpe.yaclp.ParsingException;
 
 import java.io.File;
@@ -94,7 +96,8 @@ public class FileValidator implements IArgumentValidator {
    * @param value the argument value
    * @throws ParsingException if the value is not validated
    */
-  public void validate(String value) throws ParsingException {
+  public void validate(final IOption option, final IArgument argument, final String value)
+      throws ParsingException {
     File pathToCheck = new File(value);
     if (mustCheck(MUST_BE_FILE) && !pathToCheck.isFile()) {
       throw new ParsingException("Specified path (<%s>) is not a file", value);
