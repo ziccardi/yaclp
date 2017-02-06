@@ -16,6 +16,8 @@
 
 package it.jnrpe.yaclp.validators;
 
+import it.jnrpe.yaclp.IArgument;
+import it.jnrpe.yaclp.IOption;
 import it.jnrpe.yaclp.ParsingException;
 
 /**
@@ -28,5 +30,6 @@ public interface IArgumentValidator {
    * @param value the argument value
    * @throws ParsingException if the value can't be validated
    */
-  void validate(final String value) throws ParsingException;
+  void validate(final IOption option, final IArgument argument, final String value)
+      throws ParsingException;
 }

@@ -53,4 +53,22 @@ public class ValidatorBuilder {
   public static FileValidator.Builder forFile() {
     return new FileValidator.Builder();
   }
+
+  /**
+   * Returns a builder for {@link URLValidator} objects.
+   *
+   * @return a builder for {@link URLValidator} objects
+   */
+  public static URLValidator.Builder forURL() {
+    return new URLValidator.Builder();
+  }
+
+  /**
+   * Returns a builder for {@link EnumValidator} objects.
+   *
+   * @return a builder for {@link EnumValidator} objects
+   */
+  public static EnumValidator.Builder forEnums() {
+    return new EnumValidator.Builder();
+  }
 }

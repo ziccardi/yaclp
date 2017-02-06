@@ -71,7 +71,7 @@ class PropertyArgument extends Argument {
 
     // Validate value
     for (IArgumentValidator validator : validators) {
-      validator.validate(keyValuePair[1]);
+      validator.validate(option, this, keyValuePair[1]);
     }
 
     res.addProperty(option, keyValuePair[0], keyValuePair[1]);

@@ -84,7 +84,7 @@ class Argument implements IArgument {
       String value = args.remove(pos);
 
       for (IArgumentValidator validator : validators) {
-        validator.validate(value);
+        validator.validate(option, this, value);
       }
 
       saveValue(res, option, value);
