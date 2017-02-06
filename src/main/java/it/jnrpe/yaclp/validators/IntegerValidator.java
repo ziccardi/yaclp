@@ -64,11 +64,13 @@ public class IntegerValidator implements IArgumentValidator {
       Integer val = Integer.parseInt(value, radix);
 
       if (min != null && val < min) {
-        throw new ValidationException("Value must be greater than %d (current value: %s)", min, value);
+        throw new ValidationException(
+            "Value must be greater than %d (current value: %s)", min, value);
       }
 
       if (max != null && val > max) {
-        throw new ValidationException("Value must be smaller than %d (current value: %s)", max, value);
+        throw new ValidationException(
+            "Value must be smaller than %d (current value: %s)", max, value);
       }
     } catch (NumberFormatException nfe) {
       throw new ValidationException(

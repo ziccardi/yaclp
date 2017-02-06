@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
+
 package it.jnrpe.yaclp.validators;
 
 import it.jnrpe.yaclp.IArgument;
 import it.jnrpe.yaclp.IOption;
-import it.jnrpe.yaclp.ParsingException;
 
 import java.net.MalformedURLException;
 import java.net.URL;

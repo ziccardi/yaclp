@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *******************************************************************************/
+
 package it.jnrpe.yaclp.validators;
 
 import it.jnrpe.yaclp.IArgument;
@@ -41,7 +42,7 @@ public class EnumValidator implements IArgumentValidator {
    * Constructor.
    *
    * @param acceptedValues list of accepted values
-   * @param caseSensitive Whether to perform a case sensitive or insensitive check
+   * @param caseSensitive  Whether to perform a case sensitive or insensitive check
    */
   private EnumValidator(final Collection<String> acceptedValues, final boolean caseSensitive) {
     this.caseSensitive = caseSensitive;
@@ -60,19 +61,19 @@ public class EnumValidator implements IArgumentValidator {
       final IOption option,
       final IArgument argument,
       final String value) throws ValidationException {
-      if (!acceptedValues.contains(caseSensitive ? value : value.toLowerCase())) {
-        throw new ValidationException(
-            "Value for argument <%s> of option <%s> must be one of [%s]",
-            argument.getName(),
-            option.getLongName(),
-            String.join(",", acceptedValues));
+    if (!acceptedValues.contains(caseSensitive ? value : value.toLowerCase())) {
+      throw new ValidationException(
+          "Value for argument <%s> of option <%s> must be one of [%s]",
+          argument.getName(),
+          option.getLongName(),
+          String.join(",", acceptedValues));
     }
   }
 
   /**
    * Bulder for {@link EnumValidator} objects.
    */
-  final static class Builder {
+  static final class Builder {
 
     /**
      * List of accepted values.
@@ -93,16 +94,18 @@ public class EnumValidator implements IArgumentValidator {
 
     /**
      * Adds a list of values to the collection of accepted values.
+     *
      * @param values values to be added
      * @return this builder
      */
-    public Builder withValues(final String ... values) {
+    public Builder withValues(final String... values) {
       acceptedValues.addAll(Arrays.asList(values));
       return this;
     }
 
     /**
      * Configure the validator to be built as case sensitive or insensitive.
+     *
      * @param caseSensitive true for case sensitive, false otherwise.
      * @return this builder
      */
@@ -113,12 +116,13 @@ public class EnumValidator implements IArgumentValidator {
 
     /**
      * Returns a new instance of {@link EnumValidator}.
+     *
      * @return a new instance of {@link EnumValidator}.
      */
     public EnumValidator build() {
       if (acceptedValues.isEmpty()) {
-        throw new IllegalArgumentException("List of accepted values for enum validator can't be " +
-            "empty");
+        throw new IllegalArgumentException("List of accepted values for enum validator can't be "
+            + "empty");
       }
 
       return new EnumValidator(acceptedValues, caseSensitive);
