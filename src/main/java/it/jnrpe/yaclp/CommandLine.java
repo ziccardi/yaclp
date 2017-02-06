@@ -16,6 +16,9 @@
 
 package it.jnrpe.yaclp;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -127,6 +130,16 @@ public class CommandLine {
   }
 
   /**
+   * Returns the value of the specified option as an object that can easily be converted
+   * into the target object through the usage of the asXXX methods.
+   * @param param the option param
+   * @return the parsed value object
+   */
+  public ParsedValue getParsedValue(final String param) {
+    return new ParsedValue(getValue(param));
+  }
+
+  /**
    * Returns all the values for the given option name.
    *
    * @param param the option name
@@ -181,5 +194,177 @@ public class CommandLine {
    */
   public boolean hasCommand(final String command) {
     return (this.command != null && this.command.equals(command));
+  }
+
+  /**
+   * Parsed value object. Used to convert from string to the desired object.
+   */
+  public static class ParsedValue {
+
+    /**
+     * String representation of the value.
+     */
+    private final String value;
+
+    /**
+     * Constructor.
+     * @param value string representation of the value
+     */
+    private ParsedValue(final String value) {
+      this.value = value;
+    }
+
+    /**
+     * Returns the value as an Integer with radix 10.
+     * @return the value as an Integer with radix 10
+     */
+    public Integer asInteger() {
+      return asInteger(null, 10);
+    }
+
+    /**
+     * Returns the value as an Integer with radix 10.
+     * If the option has not been specified, defaultValue is returned.
+     * @param defaultValue value to be returned if the option is not specified
+     * @return the value as an Integer with radix 10
+     */
+    public Integer asInteger(final Integer defaultValue) {
+      return asInteger(defaultValue, 10);
+    }
+
+    /**
+     * Returns the value as an Integer with the specified radix.
+     * If the option has not been specified, defaultValue is returned.
+     * @param defaultValue value to be returned if the option is not specified
+     * @param radix radix to be used to parse the number
+     * @return the value as an Integer with the specified radix.
+     */
+    public Integer asInteger(final Integer defaultValue, final int radix) {
+      if (value == null) {
+        return defaultValue;
+      }
+      return Integer.valueOf(value, radix);
+    }
+
+    /**
+     * Returns the value as a Long with radix 10.
+     * @return the value as a Long with radix 10
+     */
+    public Long asLong() {
+      return asLong(null, 10);
+    }
+
+    /**
+     * Returns the value as an Long with radix 10.
+     * If the option has not been specified, defaultValue is returned.
+     * @param defaultValue value to be returned if the option is not specified
+     * @return the value as an Long with radix 10
+     */
+    public Long asLong(final Long defaultValue) {
+      return asLong(defaultValue, 10);
+    }
+
+    /**
+     * Returns the value as an Long with the specified radix.
+     * If the option has not been specified, defaultValue is returned.
+     * @param defaultValue value to be returned if the option is not specified
+     * @param radix radix to be used to parse the number
+     * @return the value as an Long with the specified radix.
+     */
+    public Long asLong(final Long defaultValue, final int radix) {
+      if (value == null) {
+        return defaultValue;
+      }
+      return Long.valueOf(value, radix);
+    }
+
+    /**
+     * Returns the value as a Double.
+     * @return the value as a Double
+     */
+    public Double asDouble() {
+      return asDouble(null);
+    }
+
+    /**
+     * Returns the value as an Double.
+     * If the option has not been specified, defaultValue is returned.
+     * @param defaultValue value to be returned if the option is not specified
+     * @return the value as an Double
+     */
+    public Double asDouble(final Double defaultValue) {
+      if (value == null) {
+        return defaultValue;
+      }
+      return Double.valueOf(value);
+    }
+
+    /**
+     * Returns the value as a Float.
+     * @return the value as a Float
+     */
+    public Float asFloat() {
+      return asFloat(null);
+    }
+
+    /**
+     * Returns the value as an Float.
+     * If the option has not been specified, defaultValue is returned.
+     * @param defaultValue value to be returned if the option is not specified
+     * @return the value as an Float
+     */
+    public Float asFloat(final Float defaultValue) {
+      if (value == null) {
+        return defaultValue;
+      }
+      return Float.valueOf(value);
+    }
+
+    /**
+     * Returns the value as a File.
+     * @return the value as a File
+     */
+    public File asFile() {
+      return asFile(null);
+    }
+
+    /**
+     * Returns the value as an File.
+     * If the option has not been specified, defaultValue is returned.
+     * @param defaultValue value to be returned if the option is not specified
+     * @return the value as an File
+     */
+    public File asFile(final File defaultValue) {
+      if (value == null) {
+        return defaultValue;
+      }
+      return new File(value);
+    }
+
+    /**
+     * Returns the value as a URL.
+     * @return the value as a URL
+     */
+    public URL asURL() {
+      return asURL(null);
+    }
+
+    /**
+     * Returns the value as an URL.
+     * If the option has not been specified, defaultValue is returned.
+     * @param defaultValue value to be returned if the option is not specified
+     * @return the value as an URL
+     */
+    public URL asURL(final URL defaultValue) {
+      if (value == null) {
+        return defaultValue;
+      }
+
+      try {
+        return new URL(value);
+      } catch (MalformedURLException e) {
+        throw new IllegalArgumentException(e);
+      }
+    }
   }
 }

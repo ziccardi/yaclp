@@ -144,4 +144,24 @@ public class OptionTest {
             .parse(new String[]{"-o", "-O"});
 
     }
+
+    @Test
+    public void testParsedOptionValue() throws Exception {
+      CommandLine cl = ParserBuilder.forOptionsBasedCli()
+          .withOption(
+              OptionBuilder.forOption("--option1")
+                  .argument(ArgumentBuilder.forArgument("number").build()).build(),
+              OptionBuilder.forOption("--option2")
+                  .argument(ArgumentBuilder.forArgument("number").build()).build(),
+              OptionBuilder.forOption("--option3")
+                  .argument(ArgumentBuilder.forArgument("number").build()).build()
+          )
+          .build()
+          .parse(new String[]{"--option1", "10", "--option2", "20", "--option3", "30"});
+
+      Assert.assertEquals(Integer.valueOf(10), cl.getParsedValue("--option1").asInteger());
+      Assert.assertEquals(Integer.valueOf(20), cl.getParsedValue("--option2").asInteger());
+      Assert.assertEquals(Integer.valueOf(30), cl.getParsedValue("--option3").asInteger());
+
+    }
 }
