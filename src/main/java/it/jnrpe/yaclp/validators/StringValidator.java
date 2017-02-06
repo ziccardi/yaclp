@@ -18,7 +18,6 @@ package it.jnrpe.yaclp.validators;
 
 import it.jnrpe.yaclp.IArgument;
 import it.jnrpe.yaclp.IOption;
-import it.jnrpe.yaclp.ParsingException;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -65,24 +64,24 @@ public class StringValidator implements IArgumentValidator {
    * Validates the string accorging to the passed in configuration.
    *
    * @param value the argument value
-   * @throws ParsingException on error validating the string
+   * @throws ValidationException on error validating the string
    */
   public void validate(
       final IOption option,
       final IArgument argument,
-      final String value) throws ParsingException {
+      final String value) throws ValidationException {
     if (minLen != null && value.length() < minLen) {
-      throw new ParsingException("Value is too short (minimum length: %d)", minLen);
+      throw new ValidationException("Value is too short (minimum length: %d)", minLen);
     }
 
     if (maxLen != null && value.length() > maxLen) {
-      throw new ParsingException("Value is too long (maximum length: %d)", minLen);
+      throw new ValidationException("Value is too long (maximum length: %d)", minLen);
     }
 
     if (regexp != null) {
       Matcher matcher = regexp.matcher(value);
       if (!matcher.matches()) {
-        throw new ParsingException("Value is not valid according to specified rules");
+        throw new ValidationException("Value is not valid according to specified rules");
       }
     }
   }

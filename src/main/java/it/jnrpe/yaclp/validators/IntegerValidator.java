@@ -18,7 +18,6 @@ package it.jnrpe.yaclp.validators;
 
 import it.jnrpe.yaclp.IArgument;
 import it.jnrpe.yaclp.IOption;
-import it.jnrpe.yaclp.ParsingException;
 
 /**
  * Validator for integer arguments.
@@ -58,26 +57,21 @@ public class IntegerValidator implements IArgumentValidator {
     this.radix = radix;
   }
 
-  /**
-   * Validates the argument value according to the configured constraints.
-   *
-   * @param value the argument value
-   * @throws ParsingException if validation fails
-   */
+  @Override
   public void validate(final IOption option, final IArgument argument, final String value) throws
-      ParsingException {
+      ValidationException {
     try {
       Integer val = Integer.parseInt(value, radix);
 
       if (min != null && val < min) {
-        throw new ParsingException("Value must be greater than %d (current value: %s)", min, value);
+        throw new ValidationException("Value must be greater than %d (current value: %s)", min, value);
       }
 
       if (max != null && val > max) {
-        throw new ParsingException("Value must be smaller than %d (current value: %s)", max, value);
+        throw new ValidationException("Value must be smaller than %d (current value: %s)", max, value);
       }
     } catch (NumberFormatException nfe) {
-      throw new ParsingException(
+      throw new ValidationException(
           "Value [%s] is not a correct number with radix [%d]", value, radix);
     }
   }

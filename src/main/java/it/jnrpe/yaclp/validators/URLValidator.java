@@ -46,17 +46,17 @@ public class URLValidator implements IArgumentValidator {
 
   @Override
   public void validate(final IOption option, final IArgument argument, final String value) throws
-      ParsingException {
+      ValidationException {
     try {
       URL url = new URL(value);
       if (!requestedProtocols.isEmpty()
           && requestedProtocols.contains(url.getProtocol().toLowerCase())) {
-        throw new ParsingException(
+        throw new ValidationException(
             "Protocol cam be only one of [%s]. Received : '%s'",
             String.join(",", requestedProtocols), url.getProtocol());
       }
     } catch (MalformedURLException e) {
-      throw new ParsingException("Value '%s' is not a valid URL", value);
+      throw new ValidationException("Value '%s' is not a valid URL", value);
     }
   }
 
