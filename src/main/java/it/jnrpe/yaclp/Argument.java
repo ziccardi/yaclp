@@ -40,17 +40,29 @@ class Argument implements IArgument {
    */
   private final IArgumentValidator[] validators;
 
+  private final int minRepetitions;
+  private final int maxRepetitions;
+
   /**
    * Create a new argument object.
    *
    * @param name       the name of the argument
    * @param mandatory  <code>true</code> if the argument is mandatory
+   * @param minRepetitions minimum number of times the argument must be present
+   * @param maxRepetitions maximum number of times the argument must be present
    * @param validators the list of validators to be used to validate this argument value
    */
-  Argument(final String name, final boolean mandatory, final IArgumentValidator... validators) {
+  Argument(
+      final String name,
+      final boolean mandatory,
+      final int minRepetitions,
+      final int maxRepetitions,
+      final IArgumentValidator... validators) {
     this.mandatory = mandatory;
     this.name = name;
     this.validators = validators;
+    this.minRepetitions = minRepetitions;
+    this.maxRepetitions = maxRepetitions;
   }
 
   /**
@@ -65,32 +77,44 @@ class Argument implements IArgument {
    */
   public final void consume(final IOption option, final List<String> args,
                             final int pos, final CommandLine res) throws ParsingException {
-    if (pos < args.size()) {
-      // An argument must not start with '-'
-      if (!args.get(pos).startsWith("-")) {
-        String value = args.remove(pos);
+    int numberOfArgsFound = 0;
 
-        for (IArgumentValidator validator : validators) {
-          validator.validate(value);
-        }
+    while (pos < args.size() && !args.get(pos).startsWith("-")) {
+      // Argument found
+      String value = args.remove(pos);
 
-        saveValue(res, option, value);
-      } else {
-        if (mandatory) {
-          throw new ParsingException(
-              "Mandatory argument <%s> for option <%s> is not present",
-              getName(),
-              option.getLongName());
-        }
+      for (IArgumentValidator validator : validators) {
+        validator.validate(value);
       }
-    } else {
-      if (mandatory) {
+
+      saveValue(res, option, value);
+      numberOfArgsFound++;
+
+      if (numberOfArgsFound > maxRepetitions) {
         throw new ParsingException(
-            "Mandatory argument <%s> for option <%s> is not present",
+            "At most %d <%s> arguments for option <%s> must be present",
+            maxRepetitions,
             getName(),
             option.getLongName());
       }
     }
+
+    if (numberOfArgsFound == 0 && mandatory) {
+      throw new ParsingException(
+          "Mandatory argument <%s> for option <%s> is not present",
+          getName(),
+          option.getLongName());
+    }
+
+    if (numberOfArgsFound < minRepetitions) {
+      throw new ParsingException(
+          "At least %d <%s> arguments for option <%s> must be present (%d found)",
+          minRepetitions,
+          getName(),
+          option.getLongName(),
+          numberOfArgsFound);
+    }
+
   }
 
   /**

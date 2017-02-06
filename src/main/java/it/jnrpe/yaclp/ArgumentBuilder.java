@@ -42,6 +42,16 @@ public final class ArgumentBuilder {
   private List<IArgumentValidator> validators = new ArrayList<>();
 
   /**
+   * Minimum number of repetitions.
+   */
+  private int minRepetitions = 0;
+
+  /**
+   * Maximum number of repetitions.
+   */
+  private int maxRepetitions = 1;
+
+  /**
    * Constructor.
    *
    * @param name the name of the argument to be built.
@@ -85,13 +95,35 @@ public final class ArgumentBuilder {
   }
 
   /**
+   * Sets the minimum repetitions for this argument. If it is optional, this is enforced only
+   * it at least one argument is present.
+   * @param minRepetitions Minimum number of repetitions
+   * @return this builder
+   */
+  public ArgumentBuilder withMinRepetitions(final int minRepetitions) {
+    this.minRepetitions = minRepetitions;
+    return this;
+  }
+
+  /**
+   * Sets the maximum repetitions for this argument.
+   * Defaults to 1.
+   * @param maxRepetitions maximum number of repetitions
+   * @return this builder
+   */
+  public ArgumentBuilder withMaxRepetitions(final int maxRepetitions) {
+    this.maxRepetitions = maxRepetitions;
+    return this;
+  }
+
+  /**
    * Builds the argument with the provided options.
    *
    * @return the newly build argument
    */
   public IArgument build() {
     return new Argument(
-        name, mandatory,
+        name, mandatory, minRepetitions, maxRepetitions,
         validators.toArray(new IArgumentValidator[validators.size()]));
   }
 }
