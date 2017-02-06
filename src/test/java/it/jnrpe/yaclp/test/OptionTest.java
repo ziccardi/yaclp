@@ -129,5 +129,19 @@ public class OptionTest {
         Assert.fail("-s depends on -p. This should fail");
     }
 
+    @Test
+    public void testMutualRequiredOptions() throws Exception {
+        IOption option1 = OptionBuilder.forOption("-o", "--option1").build();
+        IOption option2 = OptionBuilder.forOption("-O", "--option2").build();
 
+        option1.addRequiredOption(option2);
+        option2.addRequiredOption(option1);
+
+        ParserBuilder
+            .forOptionsBasedCli()
+            .withOption(option1, option2)
+            .build()
+            .parse(new String[]{"-o", "-O"});
+
+    }
 }

@@ -198,12 +198,7 @@ abstract class AbstractOption implements IOption {
 
     // Check required option. If they are found, consume them
     for (AbstractOption requiredOption : getRequiredOptions()) {
-      if (requiredOption.isPresent(args)) {
-        requiredOption.consume(args, res);
-      } else {
-        if (res.hasOption(requiredOption.getShortName())) {
-          continue;
-        }
+      if (!requiredOption.isPresent(args) && !res.hasOption(requiredOption.getShortName())) {
         throw new ParsingException("%s requires [%s]", getLongName(), requiredOption.getLongName());
       }
     }
