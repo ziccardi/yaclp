@@ -46,7 +46,7 @@ class PropertyArgument extends Argument {
                    final String keyValueSeparator,
                    final IArgumentValidator... validators) {
     // Value must be extracted from the key=value string. We will manage validation locally.
-    super(name, true, new IArgumentValidator[0]);
+    super(name, true, 1, Integer.MAX_VALUE, new IArgumentValidator[0]);
     this.validators = validators;
     this.keyValueSeparator = keyValueSeparator;
   }
