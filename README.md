@@ -5,7 +5,7 @@
 
 ## Where can I get the latest release?
 
-The easiest wat is to pull it from the central maven repositories:
+The easiest way is to pull it from the central maven repositories:
 
 ```xml
 <dependency>
